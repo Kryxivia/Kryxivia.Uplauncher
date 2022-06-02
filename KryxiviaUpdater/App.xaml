@@ -1,0 +1,33 @@
+﻿<Application x:Class="KryxiviaUpdater.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:KryxiviaUpdater"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <FontFamily x:Key="Gilroy">pack://application:,,,/Resources/Fonts/#Gilroy-Medium.ttf</FontFamily>
+        <FontFamily x:Key="Gambetta Semibold">pack://application:,,,/Resources/Fonts/#Gambetta-Semibold.otf</FontFamily>
+
+        <Style x:Key="MyLabel">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
+                                <ColorAnimation To="#FF787C7C" Duration="0:0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
+                                <ColorAnimation To="#FF3C3E3E" Duration="0:0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
+</Application>
