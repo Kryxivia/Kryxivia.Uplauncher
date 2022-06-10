@@ -55,7 +55,7 @@ namespace KryxiviaUpdater
             _timer.Enabled = true;
 
             _updater = new Updater.Updater("kryxivia","version_app.json",UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
-            _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "http://93.23.21.204/"
+            _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "https://auth-app.kryxivia.io/"
                 , UpdateState);
             _imagesNews = new Dictionary<int, Image>()
             {
@@ -175,7 +175,7 @@ namespace KryxiviaUpdater
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    l_pourcent.Content = $"Finish... 100%";
+                    l_pourcent.Content = $"Completed... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
                     b_play.Cursor = Cursors.Hand;
@@ -186,7 +186,7 @@ namespace KryxiviaUpdater
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    l_pourcent.Content = $"Finish... 100%";
+                    l_pourcent.Content = $"Completed... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
                     b_play.Cursor = Cursors.Hand;

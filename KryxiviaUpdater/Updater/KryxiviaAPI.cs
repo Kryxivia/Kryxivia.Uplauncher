@@ -79,7 +79,7 @@ namespace KryxiviaUpdater.Updater
             {
                 var playload = new
                 {
-                    TokenHash =  LoginToken.tokenHash
+                    TokenHash =  LoginToken?.tokenHash
                 };
                 var httpContent = new StringContent(JsonConvert.SerializeObject(playload), Encoding.UTF8, "application/json");
                 var httpResponse = await client.PostAsync($"{_urlApi}api/v1/login/token_auth_check", httpContent);
@@ -95,7 +95,7 @@ namespace KryxiviaUpdater.Updater
         public void OpenWebSite()
         {
             var process = new System.Diagnostics.
-                ProcessStartInfo($"{_websiteAuthentification}?auth-token={LoginToken.tokenHash}")
+                ProcessStartInfo($"{_websiteAuthentification}?auth-token={LoginToken?.tokenHash}")
             {
                 UseShellExecute = true,
             };
