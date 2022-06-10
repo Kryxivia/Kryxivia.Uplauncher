@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace KryxiviaUpdater.Builder
 {
