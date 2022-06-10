@@ -28,6 +28,7 @@ namespace KryxiviaUpdater
     public partial class MainWindow : Window
     {
         private KryxiviaUpdater.Updater.Updater _updater;
+        private KryxiviaUpdater.Updater.KryxiviaAPI _kryxiviaAPI;
         private int currentNewsIndex = 0;
         private object _state = new object();
         private Dictionary<int, Image> _imagesNews;
@@ -38,6 +39,7 @@ namespace KryxiviaUpdater
         private const int _maxNews = 3;
         private string _pathKryxivia = $"kryxivia{System.IO.Path.DirectorySeparatorChar}Kryxivia.exe";
         private Timer _timer;
+        private UpdaterState _updaterState;
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +55,8 @@ namespace KryxiviaUpdater
             _timer.Enabled = true;
 
             _updater = new Updater.Updater("kryxivia","version_app.json",UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
+            _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "http://93.23.21.204/"
+                , UpdateState);
             _imagesNews = new Dictionary<int, Image>()
             {
                 {0, b_news1},
@@ -62,16 +66,14 @@ namespace KryxiviaUpdater
 
             Task.Run(async () =>
             {
-                await _updater.Setup();
-                if (_updater.State == Core.UpdaterState.Downloading)
+                _updaterState =  await _updater.Setup();
+                if (_updaterState == Core.UpdaterState.Downloading)
                 {
+                    UpdateState(_updaterState);
                    await _updater.StartDownload();
-                    CanPlay();
-                }else if(_updater.State == UpdaterState.Playing)
-                {
-                    CanPlay();
                 }
-
+                _updaterState = await _kryxiviaAPI.Setup();
+                UpdateState(_updaterState);
             });
 
         }
@@ -162,17 +164,60 @@ namespace KryxiviaUpdater
 
         }
 
-        private void CanPlay()
+        public void UpdateState(UpdaterState state)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            _updaterState = state;
+            RefreshUI();
+        }
+        private void RefreshUI()
+        {
+            if(_updaterState == UpdaterState.Playing)
             {
-                l_pourcent.Content = $"Finish... 100%";
-                l_version.Content = "";
-                progress.Value = 100;
-                b_play.Cursor = Cursors.Hand;
-                Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg_play.png", UriKind.RelativeOrAbsolute)));
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    l_pourcent.Content = $"Finish... 100%";
+                    l_version.Content = "";
+                    progress.Value = 100;
+                    b_play.Cursor = Cursors.Hand;
+                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg_play.png", UriKind.RelativeOrAbsolute)));
 
-            }), DispatcherPriority.Background);
+                }), DispatcherPriority.Background);
+            }else if(_updaterState == UpdaterState.Connecting)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    l_pourcent.Content = $"Finish... 100%";
+                    l_version.Content = "";
+                    progress.Value = 100;
+                    b_play.Cursor = Cursors.Hand;
+                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg_connect.png", UriKind.RelativeOrAbsolute)));
+
+                }), DispatcherPriority.Background);
+            }
+            else if (_updaterState == UpdaterState.Repearing)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    l_pourcent.Content = $"Repearing...";
+                    l_version.Content = "";
+                    progress.Value = 100;
+                    b_play.Cursor = Cursors.No;
+                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg.png", UriKind.RelativeOrAbsolute)));
+
+                }), DispatcherPriority.Background);
+            }else if(_updaterState == UpdaterState.Downloading)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    l_pourcent.Content = $"Updating... 100%";
+                    l_version.Content = "";
+                    progress.Value = 100;
+                    b_play.Cursor = Cursors.No;
+                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg.png", UriKind.RelativeOrAbsolute)));
+
+                }), DispatcherPriority.Background);
+            }
+
         }
 
         private void OpenLink(string link)
@@ -239,9 +284,26 @@ namespace KryxiviaUpdater
 
         private void b_play_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (File.Exists(_pathKryxivia) && _updater.State == UpdaterState.Playing)
+            if (File.Exists(_pathKryxivia) && _updaterState == UpdaterState.Playing)
             {
                 Process.Start(_pathKryxivia);
+            }else if(_updaterState == UpdaterState.Connecting)
+            {
+                _kryxiviaAPI.OpenWebSite();
+            }
+        }
+        private void b_reapear_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_updaterState == UpdaterState.Connecting || _updaterState == UpdaterState.Playing)
+            {
+                UpdateState(UpdaterState.Repearing);
+                var task = new Task(async () =>
+                {
+                    var state = await _updater.RepairClients();
+                     _updaterState = await _kryxiviaAPI.Setup();
+                    UpdateState(_updaterState);
+                });
+                task.Start();
             }
         }
     }

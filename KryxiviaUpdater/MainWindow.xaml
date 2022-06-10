@@ -44,5 +44,6 @@
             </ProgressBar.Foreground>
         </ProgressBar>
         <Label x:Name="b_play" Content="" HorizontalAlignment="Left" Margin="742,479,0,0" VerticalAlignment="Top" Height="47" Width="140" Cursor="Hand" MouseDown="b_play_MouseDown"/>
+        <Image x:Name="b_repear" Margin="800,65,110,482" Source="/Resources/Images/repear.png" Stretch="Fill" MouseDown="b_reapear_MouseDown" Cursor="Hand"/>
     </Grid>
 </Window>

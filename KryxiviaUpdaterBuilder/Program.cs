@@ -49,11 +49,29 @@ namespace KryxiviaUpdater.Builder
             
             Directory.CreateDirectory(version);
             var compactor = new VersionCompactor($"{version}", newVersionFiles.ToList());
-            compactor.CompressAndZip();
-
+            var files = compactor.CompressAndZip();
+            File.WriteAllText($"{version}/files", files.ToString());
             versionApp.FilesChecksum = currentFilesChecksum;
             versionApp.Versions.Add(version);
             File.WriteAllText("version_app.json", JsonConvert.SerializeObject(versionApp));
+            Console.WriteLine("Write base directory");
+
+            string @base = "0.0.0";
+            if (Directory.Exists(@base))
+            {
+                var directory = new DirectoryInfo(@base);
+                foreach (FileInfo file in directory.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+
+            Directory.CreateDirectory(@base);
+
+            compactor = new VersionCompactor(@base, currentFilesChecksum.ToList());
+            files = compactor.CompressAndZip();
+            File.WriteAllText($"{@base}/files", files.ToString());
+
             Console.WriteLine("Successfully finished.");
         }
 

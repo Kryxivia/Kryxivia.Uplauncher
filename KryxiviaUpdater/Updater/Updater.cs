@@ -22,7 +22,6 @@ namespace KryxiviaUpdater.Updater
         private Action<NewsList?> _setNewsList;
         private Action _unzipFileLog;
         private string _kryxiviaFolder;
-        public UpdaterState State { get; private set; }
         public IEnumerable<FileCheckSum> FilesToDownload { get; set; }
         public List<string> VersionsToDownload { get;set; }
         public Updater(string kryxiviaFolder, string pathVersion,
@@ -39,7 +38,7 @@ namespace KryxiviaUpdater.Updater
             _kryxiviaFolder = kryxiviaFolder;
         }
 
-        public async Task Setup()
+        public async Task<UpdaterState> Setup()
         {
             _setNewsList(await GetServerNews());
             if (!File.Exists(_pathVersion)) File.WriteAllText(_pathVersion, JsonConvert.SerializeObject(new VersionApp()));
@@ -49,19 +48,25 @@ namespace KryxiviaUpdater.Updater
             {
                 if(_serverVersionApp?.Versions.Count != _clientVersionApp?.Versions.Count)
                 {
-                    VersionsToDownload = _serverVersionApp?.Versions.Except(_clientVersionApp?.Versions).ToList();
-                    State = UpdaterState.Downloading;
-                    return;
+                    // first time we download directly base
+                    if(_clientVersionApp.Versions.Count == 0)
+                    {
+                        VersionsToDownload = new List<string> { "0.0.0" };
+                    }
+                    else
+                    {
+                        VersionsToDownload = _serverVersionApp?.Versions.Except(_clientVersionApp?.Versions).ToList();
+                    }
+                    return UpdaterState.Downloading;
                 }
             }
 
-            State = UpdaterState.Playing;
-            return;
+            return UpdaterState.Connecting;
         }
 
-        public void Repair()
+        public async Task<UpdaterState> RepairClients()
         {
-           /* var currentFilesChecksum = new List<FileCheckSum>();
+            var currentFilesChecksum = new List<FileCheckSum>();
             foreach (var file in Directory.GetFiles(_kryxiviaFolder, "*.*", SearchOption.AllDirectories))
             {
                 currentFilesChecksum.Add(new FileCheckSum
@@ -71,28 +76,30 @@ namespace KryxiviaUpdater.Updater
                 });
             }
 
-            var files = currentFilesChecksum.Except(_serverVersionApp.FilesChecksum);
+            var files = _serverVersionApp.FilesChecksum.Except(currentFilesChecksum).ToList();
+            int count = 1;
             foreach (var file in files)
             {
                 var downloadFileUrl = $"{_urlServer}{file.FilePath}";
-                var destinationFilePath = Path.GetFullPath($"{version}.zip");
+                var destinationFilePath = Path.GetFullPath(file.FilePath);
+
+                var directoryPath = Path.GetDirectoryName(destinationFilePath);
+                Directory.CreateDirectory(directoryPath);
 
                 using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                 {
                     client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
-                        _updateVersionProgress(count, VersionsToDownload.Count);
+                        _updateVersionProgress(count, files.Count());
                         _updatePercentProgress((int)progressPercentage);
                     };
 
                     await client.StartDownload();
-                    UnzipArchive(destinationFilePath);
-                    _clientVersionApp?.Versions.Add(version);
-                    WriteProgressDownload();
+                    count++;
                 }
             }
 
             WriteServerChecksumFile();
-            State = UpdaterState.Playing;*/
+            return UpdaterState.Playing;
         }
 
         public async Task StartDownload()
@@ -101,25 +108,30 @@ namespace KryxiviaUpdater.Updater
             foreach(var version in VersionsToDownload)
             {
                 count++;
-                var downloadFileUrl = $"{_urlServer}{version}/{version}.zip";
-                var destinationFilePath = Path.GetFullPath($"{version}.zip");
-
-                using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                var filesVersion = await GetZipVersion($"{_urlServer}{version}");
+                for(int i = 0;i < filesVersion; i++)
                 {
-                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
-                        _updateVersionProgress(count, VersionsToDownload.Count);
-                        _updatePercentProgress((int)progressPercentage);
-                    };
+                    var downloadFileUrl = $"{_urlServer}{version}/{i}.zip";
+                    var destinationFilePath = Path.GetFullPath($"{i}.zip");
 
-                    await client.StartDownload();
-                    UnzipArchive(destinationFilePath);
-                    _clientVersionApp?.Versions.Add(version);
-                    WriteProgressDownload();
+                    using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                    {
+                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
+                            _updateVersionProgress(i + 1, filesVersion);
+                            _updatePercentProgress((int)progressPercentage);
+                        };
+
+                        await client.StartDownload();
+                        UnzipArchive(destinationFilePath);
+                    }
                 }
+
+                _clientVersionApp?.Versions.Add(version);
+                WriteProgressDownload();
+
             }
 
             WriteServerChecksumFile();
-            State = UpdaterState.Playing;
         }
 
         private void UnzipArchive(string pathArchive)
@@ -150,6 +162,19 @@ namespace KryxiviaUpdater.Updater
 
             return JsonConvert.DeserializeObject<VersionApp>(result);
         }
+
+        private async Task<int> GetZipVersion(string urlVersion)
+        {
+            var versionAppContents = $"{urlVersion}/files";
+            var result = "";
+            using (HttpClient client = new HttpClient())
+            {
+                result = await client.GetStringAsync(versionAppContents);
+            }
+
+            return int.Parse(result);
+        }
+
 
         private async Task<NewsList?> GetServerNews()
         {

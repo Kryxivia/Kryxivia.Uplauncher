@@ -18,17 +18,29 @@ namespace KryxiviaUpdater.Core
 
 		}
 
-        public void CompressAndZip()
+        public int CompressAndZip()
         {
-            
-			using (ZipArchive zipFile = ZipFile.Open($"{_pathZip}/{_pathZip}.zip", ZipArchiveMode.Create))
-			{
-				foreach(var file in _filesChecksum)
+            var step = 0;
+            double totalLength = 0;
+            int i = 0;
+            while (i < _filesChecksum.Count)
+            {
+                using (ZipArchive zipFile = ZipFile.Open($"{_pathZip}/{step}.zip", ZipArchiveMode.Create))
                 {
-                    zipFile.CreateEntryFromFile(file.FilePath, file.FilePath, CompressionLevel.Optimal);  
-                }
+                    while(i < _filesChecksum.Count && totalLength <= 300)
+                    {
+                        totalLength += (new FileInfo(_filesChecksum[i].FilePath).Length) / (1024d * 1024d);
 
+                        zipFile.CreateEntryFromFile(_filesChecksum[i].FilePath,
+                            _filesChecksum[i].FilePath, CompressionLevel.Optimal);
+                        i++;
+                    }
+                    totalLength = 0;
+                    step++;
+                }
             }
-		}
+            return step;
+
+        }
     }
 }

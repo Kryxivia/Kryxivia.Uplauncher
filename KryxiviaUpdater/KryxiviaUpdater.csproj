@@ -14,10 +14,12 @@
     <None Remove="Resources\Fonts\FontsFree-Net-Gilroy3.ttf" />
     <None Remove="Resources\Fonts\Gambetta-Semibold.otf" />
     <None Remove="Resources\Fonts\Gilroy-Medium.ttf" />
+    <None Remove="Resources\Images\bg_connect.png" />
     <None Remove="Resources\Images\bg_content.png" />
     <None Remove="Resources\Images\bg_play.png" />
     <None Remove="Resources\Images\play.png" />
     <None Remove="Resources\Images\play_disabled.png" />
+    <None Remove="Resources\Images\repear.png" />
     <None Remove="Resources\news_body.png" />
     <None Remove="Resources\news_ellipse.png" />
     <None Remove="Resources\news_ellipse1.png" />
@@ -30,6 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +47,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\bg.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\bg_connect.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\bg_content.png">
@@ -71,6 +77,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\reduce.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\repear.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

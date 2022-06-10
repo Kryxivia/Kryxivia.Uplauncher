@@ -9,9 +9,11 @@ namespace KryxiviaUpdater.Core
     public enum UpdaterState
     {
         Starting,
+        Repearing,
         Checking,
         Downloading,
         Breaking,
+        Connecting,
         Playing
     }
 }
