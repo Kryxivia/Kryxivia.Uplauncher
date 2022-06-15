@@ -34,9 +34,9 @@ namespace KryxiviaUpdater
         private object _state = new object();
         private Dictionary<int, Image> _imagesNews;
         private NewsList? _newsList;
-        private const string _linkWebsite = "https://yetanotherchris.dev/csharp/6-ways-to-get-the-current-directory-in-csharp/";
-        private const string _linkBlog = "";
-        private const string _linkHelp = "";
+        private const string _linkWebsite = "https://kryxivia.io/";
+        private const string _linkBlog = "https://kryxivia.io/en/devblog";
+        private const string _linkHelp = "https://docs.kryxivia.io/";
         private const int _maxNews = 3;
         private string _pathKryxivia = $"client{System.IO.Path.DirectorySeparatorChar}Kryxivia.exe";
         private Timer _timer;
@@ -211,7 +211,7 @@ namespace KryxiviaUpdater
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    l_pourcent.Content = $"Finish... 100%";
+                    l_pourcent.Content = $"Completed... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
                     l_play.Cursor = Cursors.Hand;
@@ -224,7 +224,7 @@ namespace KryxiviaUpdater
             {
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    l_pourcent.Content = $"Finish... 100%";
+                    l_pourcent.Content = $"Completed... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
                     l_play.Cursor = Cursors.Hand;

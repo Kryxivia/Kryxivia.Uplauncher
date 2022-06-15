@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
-using System.Text.Json.Nodes;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using Renci.SshNet.Common;
+using System.Text.Json;
 
 namespace KryxiviaUpdater.Builder
 {
