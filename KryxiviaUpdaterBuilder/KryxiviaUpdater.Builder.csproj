@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
+    <PackageReference Include="SSH.NET" Version="2020.0.2" />
   </ItemGroup>
 
   <ItemGroup>

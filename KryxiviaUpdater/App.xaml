@@ -13,6 +13,50 @@
                     <EventTrigger.Actions>
                         <BeginStoryboard>
                             <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
+                                <ColorAnimation To="#f0effc" Duration="0:0:0:01"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
+                                <ColorAnimation To="#a8a7b0" Duration="0:0:0:0"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Play">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
+                                <ColorAnimation To="#ffffff" Duration="0:0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Mouse.MouseLeave">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
+                                <ColorAnimation To="#a19d9d" Duration="0:0:0:1"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Address">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Mouse.MouseEnter">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
                                 <ColorAnimation To="#FF787C7C" Duration="0:0:0:1"/>
                             </Storyboard>
                         </BeginStoryboard>

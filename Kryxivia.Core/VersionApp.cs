@@ -24,6 +24,8 @@ namespace KryxiviaUpdater.Core
     public class VersionApp
     {
         public List<string> Versions { get; set; } = new List<string>();
+        public List<string> NotYetUploaded { get; set; } = new List<string>();
         public List<FileCheckSum> FilesChecksum { get; set; } = new List<FileCheckSum>();
+        public string Path { get; set; } = Directory.GetCurrentDirectory();
     }
 }

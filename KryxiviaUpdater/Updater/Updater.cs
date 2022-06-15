@@ -24,6 +24,17 @@ namespace KryxiviaUpdater.Updater
         private string _kryxiviaFolder;
         public IEnumerable<FileCheckSum> FilesToDownload { get; set; }
         public List<string> VersionsToDownload { get;set; }
+        public string CurrentPath
+        {
+            get
+            {
+                return _clientVersionApp.Path;
+            }
+            set
+            {
+                _clientVersionApp.Path = value;
+            }
+        }
         public Updater(string kryxiviaFolder, string pathVersion,
             Action<int, int> updateVersionProgress, Action<int> updatePourcentProgress,
             Action<NewsList?> setNewsList, Action unzipFileLog)
@@ -83,8 +94,8 @@ namespace KryxiviaUpdater.Updater
                 var downloadFileUrl = $"{_urlServer}{file.FilePath}";
                 var destinationFilePath = Path.GetFullPath(file.FilePath);
 
-                var directoryPath = Path.GetDirectoryName(destinationFilePath);
-                Directory.CreateDirectory(directoryPath);
+                    var directoryPath = Path.GetDirectoryName(destinationFilePath);
+                    Directory.CreateDirectory(directoryPath);
 
                 using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                 {
@@ -112,7 +123,10 @@ namespace KryxiviaUpdater.Updater
                 for(int i = 0;i < filesVersion; i++)
                 {
                     var downloadFileUrl = $"{_urlServer}{version}/{i}.zip";
-                    var destinationFilePath = Path.GetFullPath($"{i}.zip");
+                    string destinationFilePath = System.IO.Path.Combine(new string[] {
+                    System.IO.Path.GetTempPath(),
+                    $"{i}.zip" });
+
 
                     using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                     {
@@ -138,7 +152,6 @@ namespace KryxiviaUpdater.Updater
         {
             _unzipFileLog();
             ZipFile.ExtractToDirectory(pathArchive, Directory.GetCurrentDirectory(), true);
-            File.Delete(pathArchive);
         }
 
         public void WriteProgressDownload()
@@ -151,9 +164,10 @@ namespace KryxiviaUpdater.Updater
             File.WriteAllText(_pathVersion, JsonConvert.SerializeObject(_serverVersionApp));
         }
 
+
         private async Task<VersionApp?> GetServerVersionApp()
         {
-            var versionAppContents = $"{_urlServer}/version_app.json";
+            var versionAppContents = $"{_urlServer}/versionApp.json";
             var result = "";
             using (HttpClient client = new HttpClient())
             {

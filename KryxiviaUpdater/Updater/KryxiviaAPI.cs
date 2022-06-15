@@ -17,17 +17,20 @@ namespace KryxiviaUpdater.Updater
         private string _websiteAuthentification;
         private Task? _authPooler;
         private Action<UpdaterState> _updateState;
+        private Action<string> _updateAddress;
         public LoginToken? LoginToken
         {
             get;
             private set;
         }
 
-        public KryxiviaAPI(string urlApi, string websiteAuthentification, Action<UpdaterState> updateState)
+        public KryxiviaAPI(string urlApi, string websiteAuthentification, Action<UpdaterState> updateState
+            ,Action<string> updateAddress)
         {
             _urlApi = urlApi;
             _websiteAuthentification = websiteAuthentification;
             _updateState = updateState;
+            _updateAddress = updateAddress;
             LoginToken = null;
             _authPooler = null;
         }
@@ -47,12 +50,14 @@ namespace KryxiviaUpdater.Updater
             else
             {
                 var jwtToken = new JwtSecurityToken(LoginToken?.jwtAttached);
-                if(DateTime.Now > jwtToken.ValidTo)
+                if (DateTime.Now > jwtToken.ValidTo)
                 {
                     return UpdaterState.Connecting;
                 }
                 else
                 {
+                    var publicKey = jwtToken.Claims.First(x => x.Type == "publickey");
+                    _updateAddress(publicKey.Value);
                     return UpdaterState.Playing;
                 }
             }
@@ -111,6 +116,9 @@ namespace KryxiviaUpdater.Updater
                         callback = await CallBackAuthentification();
                     }
                     File.WriteAllText("kryxiviaToken.json", JsonConvert.SerializeObject(callback));
+                    var jwtToken = new JwtSecurityToken(callback?.jwtAttached);
+                    var publicKey = jwtToken.Claims.First(x => x.Type == "publickey");
+                    _updateAddress(publicKey.Value);
                     _updateState(UpdaterState.Playing);
                     _authPooler = null;
                 });

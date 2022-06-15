@@ -17,9 +17,15 @@
     <None Remove="Resources\Images\bg_connect.png" />
     <None Remove="Resources\Images\bg_content.png" />
     <None Remove="Resources\Images\bg_play.png" />
+    <None Remove="Resources\Images\button.png" />
+    <None Remove="Resources\Images\close_over.png" />
+    <None Remove="Resources\Images\open_directory.png" />
     <None Remove="Resources\Images\play.png" />
     <None Remove="Resources\Images\play_disabled.png" />
+    <None Remove="Resources\Images\reduce_over.png" />
     <None Remove="Resources\Images\repear.png" />
+    <None Remove="Resources\Images\repear_over.png" />
+    <None Remove="Resources\Images\settings.png" />
     <None Remove="Resources\news_body.png" />
     <None Remove="Resources\news_ellipse.png" />
     <None Remove="Resources\news_ellipse1.png" />
@@ -33,6 +39,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
+    <PackageReference Include="WindowsAPICodePack" Version="1.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,7 +65,13 @@
     <Resource Include="Resources\Images\bg_play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\close.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\close_over.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\news_body.png">
@@ -70,6 +83,9 @@
     <Resource Include="Resources\Images\news_ellipse1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\open_directory.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -79,7 +95,16 @@
     <Resource Include="Resources\Images\reduce.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\reduce_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\repear.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\repear_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\settings.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

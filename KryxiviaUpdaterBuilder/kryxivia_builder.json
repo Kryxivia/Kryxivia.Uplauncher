@@ -1,4 +1,8 @@
 {
   "URL": "",
-  "PathFolder": "kryxivia"
+  "PathFolder": "client",
+  "Server": "144.91.65.207",
+  "User": "yami",
+  "Password": "yami",
+  "SftpPath": "kryxivia"
 }

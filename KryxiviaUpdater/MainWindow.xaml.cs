@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Linq;
 using System.Timers;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace KryxiviaUpdater
 {
@@ -37,7 +38,7 @@ namespace KryxiviaUpdater
         private const string _linkBlog = "";
         private const string _linkHelp = "";
         private const int _maxNews = 3;
-        private string _pathKryxivia = $"kryxivia{System.IO.Path.DirectorySeparatorChar}Kryxivia.exe";
+        private string _pathKryxivia = $"client{System.IO.Path.DirectorySeparatorChar}Kryxivia.exe";
         private Timer _timer;
         private UpdaterState _updaterState;
         public MainWindow()
@@ -54,9 +55,9 @@ namespace KryxiviaUpdater
             _timer.Interval = 10000;
             _timer.Enabled = true;
 
-            _updater = new Updater.Updater("kryxivia","version_app.json",UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
+            _updater = new Updater.Updater("client", "versionApp.json", UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
             _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "http://93.23.21.204/"
-                , UpdateState);
+                ,UpdateState, UpdateAddress);
             _imagesNews = new Dictionary<int, Image>()
             {
                 {0, b_news1},
@@ -80,14 +81,42 @@ namespace KryxiviaUpdater
 
         public void Initialize()
         {
+            l_address.Content = "";
             l_pourcent.Content = "";
             l_version.Content  = "";
             t_news.Text = "";
             l_news.Content = "";
             p_progressBar.Value = 100;
             currentNewsIndex = 0;
-            b_play.Cursor = Cursors.No;
+            l_play.Cursor = Cursors.No;
+            CloseSettings();
         }
+        
+        public void OpenSettings()
+        {
+            p_settings.Visibility = Visibility.Visible;
+            b_settings_close.Visibility = Visibility.Visible;
+            setting_text.Visibility = Visibility.Visible;
+            settings_folder.Visibility = Visibility.Visible;
+            directory_dialog.Visibility = Visibility.Visible;
+            open_directory.Visibility = Visibility.Visible;
+            repear.Visibility = Visibility.Visible;
+            b_repear.Visibility = Visibility.Visible;
+            directory_dialog.Text = _updater.CurrentPath;
+        }
+
+        public void CloseSettings()
+        {
+            p_settings.Visibility = Visibility.Hidden;
+            b_settings_close.Visibility = Visibility.Hidden;
+            setting_text.Visibility = Visibility.Hidden;
+            settings_folder.Visibility = Visibility.Hidden;
+            directory_dialog.Visibility = Visibility.Hidden;
+            open_directory.Visibility = Visibility.Hidden;
+            repear.Visibility = Visibility.Hidden;
+            b_repear.Visibility = Visibility.Hidden;
+        }
+
         public void UpdateVersionProgress(int start, int count)
         {
             Dispatcher.BeginInvoke(new Action(() =>
@@ -164,6 +193,13 @@ namespace KryxiviaUpdater
 
         }
 
+        public void UpdateAddress(string address)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                l_address.Content = address;
+            }));
+        }
         public void UpdateState(UpdaterState state)
         {
             _updaterState = state;
@@ -178,8 +214,10 @@ namespace KryxiviaUpdater
                     l_pourcent.Content = $"Finish... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
-                    b_play.Cursor = Cursors.Hand;
-                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg_play.png", UriKind.RelativeOrAbsolute)));
+                    l_play.Cursor = Cursors.Hand;
+                    l_play.Content = "PLAY NOW";
+                    l_play.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom("#a19d9d");
+                    l_play.Style = (Style)FindResource("Play"); ;
 
                 }), DispatcherPriority.Background);
             }else if(_updaterState == UpdaterState.Connecting)
@@ -189,8 +227,10 @@ namespace KryxiviaUpdater
                     l_pourcent.Content = $"Finish... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
-                    b_play.Cursor = Cursors.Hand;
-                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg_connect.png", UriKind.RelativeOrAbsolute)));
+                    l_play.Cursor = Cursors.Hand;
+                    l_play.Content = "SIGN IN";
+                    l_play.Foreground = new SolidColorBrush(Colors.White);
+                    l_play.Style = (Style)FindResource("Play"); ;
 
                 }), DispatcherPriority.Background);
             }
@@ -201,8 +241,10 @@ namespace KryxiviaUpdater
                     l_pourcent.Content = $"Repearing...";
                     l_version.Content = "";
                     progress.Value = 100;
-                    b_play.Cursor = Cursors.No;
-                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg.png", UriKind.RelativeOrAbsolute)));
+                    l_play.Cursor = Cursors.No;
+                    l_play.Foreground = new SolidColorBrush(Colors.Gray);
+                    l_play.Style = null;
+                    l_play.Content = "PLAY NOW";
 
                 }), DispatcherPriority.Background);
             }else if(_updaterState == UpdaterState.Downloading)
@@ -212,8 +254,10 @@ namespace KryxiviaUpdater
                     l_pourcent.Content = $"Updating... 100%";
                     l_version.Content = "";
                     progress.Value = 100;
-                    b_play.Cursor = Cursors.No;
-                    Background = new ImageBrush(new BitmapImage(new Uri("pack://application:,,,/Resources/Images/bg.png", UriKind.RelativeOrAbsolute)));
+                    l_play.Content = "PLAY NOW";
+                    l_play.Cursor = Cursors.No;
+                    l_play.Foreground = new SolidColorBrush(Colors.Gray);
+                    l_play.Style = null; ;
 
                 }), DispatcherPriority.Background);
             }
@@ -294,17 +338,102 @@ namespace KryxiviaUpdater
         }
         private void b_reapear_MouseDown(object sender, MouseButtonEventArgs e)
         {
+
+
+        }
+
+        private void l_play_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (File.Exists(_pathKryxivia) && _updaterState == UpdaterState.Playing)
+            {
+                Process.Start(_pathKryxivia);
+            }
+            else if (_updaterState == UpdaterState.Connecting)
+            {
+                _kryxiviaAPI.OpenWebSite();
+            }
+        }
+
+        private void b_close_MouseEnter(object sender, MouseEventArgs e)
+        {
+            b_close.Source = new BitmapImage(new Uri("Resources/Images/close_over.png", UriKind.Relative));
+        }
+
+        private void b_close_MouseLeave(object sender, MouseEventArgs e)
+        {
+            b_close.Source = new BitmapImage(new Uri("Resources/Images/close.png", UriKind.Relative));
+        }
+
+        private void b_reduce_MouseEnter(object sender, MouseEventArgs e)
+        {
+            b_reduce.Source = new BitmapImage(new Uri("Resources/Images/reduce_over.png", UriKind.Relative));
+        }
+
+        private void b_reduce_MouseLeave(object sender, MouseEventArgs e)
+        {
+            b_reduce.Source = new BitmapImage(new Uri("Resources/Images/reduce.png", UriKind.Relative));
+        }
+
+        private void b_settings_close_MouseEnter(object sender, MouseEventArgs e)
+        {
+            b_settings_close.Source = new BitmapImage(new Uri("Resources/Images/close_over.png", UriKind.Relative));
+        }
+
+        private void b_settings_close_MouseLeave(object sender, MouseEventArgs e)
+        {
+            b_settings_close.Source = new BitmapImage(new Uri("Resources/Images/close.png", UriKind.Relative));
+        }
+
+        private void b_settings_close_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CloseSettings();
+        }
+
+        private void open_directory_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+            var dialog = new CommonOpenFileDialog();
+            dialog.IsFolderPicker = true;
+            CommonFileDialogResult result = dialog.ShowDialog();
+            if(result == CommonFileDialogResult.Ok)
+            {
+                var folder = System.IO.Path.GetDirectoryName(dialog.FileName);
+                _updater.CurrentPath = folder;
+                _updater.WriteProgressDownload();
+                OpenSettings();
+            }
+        }
+
+        private void b_settings_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            OpenSettings();
+        }
+
+        private void repear_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CloseSettings();
             if (_updaterState == UpdaterState.Connecting || _updaterState == UpdaterState.Playing)
             {
                 UpdateState(UpdaterState.Repearing);
                 var task = new Task(async () =>
                 {
                     var state = await _updater.RepairClients();
-                     _updaterState = await _kryxiviaAPI.Setup();
+                    _updaterState = await _kryxiviaAPI.Setup();
                     UpdateState(_updaterState);
                 });
                 task.Start();
             }
         }
+
+        private void b_settings_MouseEnter(object sender, MouseEventArgs e)
+        {
+            b_settings.Source = new BitmapImage(new Uri("Resources/Images/repear_over.png", UriKind.Relative));
+        }
+
+        private void b_settings_MouseLeave(object sender, MouseEventArgs e)
+        {
+            b_settings.Source = new BitmapImage(new Uri("Resources/Images/repear.png", UriKind.Relative));
+        }
+
     }
 }

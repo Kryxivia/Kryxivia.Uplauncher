@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KryxiviaUpdater"
         mc:Ignorable="d"
-        Title="MainWindow" Height="579" Width="942" AllowsTransparency="True" WindowStyle="None" MouseDown="Window_MouseDown_1">
+        Title="Kryxivia" Height="579" Width="942" AllowsTransparency="True" WindowStyle="None" MouseDown="Window_MouseDown_1">
     <Window.Foreground>
         <ImageBrush/>
     </Window.Foreground>
@@ -16,8 +16,8 @@
         <Label x:Name="l_version" Content="Label" HorizontalAlignment="Left" Margin="155,509,0,0" VerticalAlignment="Top" Foreground="#FF474442" FontFamily="Gilroy" FontWeight="Regular" />
         <Label x:Name="l_pourcent" Content="Label" HorizontalAlignment="Left" Margin="570,510,0,0" VerticalAlignment="Top" Foreground="#2e6339" Width="163" HorizontalContentAlignment="Right" FontFamily="Gilroy" FontWeight="Regular" />
         <ProgressBar x:Name="p_progressBar" HorizontalAlignment="Left" Height="25" Margin="90,597,0,0" VerticalAlignment="Top" Width="567"/>
-        <Image x:Name="b_close" Margin="864,65,46,482" Source="/Resources/Images/close.png" Stretch="Fill" Cursor="Hand" MouseDown="b_close_MouseDown" Width="32" Height="32"/>
-        <Image x:Name="b_reduce" Margin="832,65,78,482" Source="/Resources/Images/reduce.png" Stretch="Fill" Cursor="Hand" MouseDown="b_reduce_MouseDown" Height="32" Width="32"/>
+        <Image x:Name="b_close" Margin="864,65,46,482" Source="/Resources/Images/close.png" Stretch="Fill" Cursor="Hand" MouseDown="b_close_MouseDown" Width="32" Height="32" MouseEnter="b_close_MouseEnter" MouseLeave="b_close_MouseLeave"/>
+        <Image x:Name="b_reduce" Margin="832,65,78,482" Source="/Resources/Images/reduce.png" Stretch="Fill" Cursor="Hand" MouseDown="b_reduce_MouseDown" Height="32" Width="32" MouseEnter="b_reduce_MouseEnter" MouseLeave="b_reduce_MouseLeave"/>
         <Image Margin="529,108,41,317" Source="/Resources/Images/news_body.png" Stretch="Fill"/>
         <Image x:Name="b_news1" Cursor="Hand"  Margin="575,145,353,420" Source="/Resources/Images/news_ellipse1.png" Stretch="Fill" MouseDown="b_news1_MouseDown" Width="14" Height="14"/>
         <Image x:Name="b_news2" Cursor="Hand"  Margin="591,145,337,420" Source="/Resources/Images/news_ellipse1.png" Stretch="Fill" MouseDown="b_news2_MouseDown" Width="14" Height="14"/>
@@ -32,9 +32,9 @@
                 </TransformGroup>
             </TextBlock.RenderTransform><Run Text="Launch of Kryxivia on its desktop "/><LineBreak/><Run Text="version with our new launcher!"/></TextBlock>
         <Label x:Name="l_news" Content="Label" HorizontalAlignment="Left" Margin="621,140,0,0" VerticalAlignment="Top" FontSize="11" Foreground="#FF3C3E3E" FontFamily="Gilroy" FontStyle="Normal" Cursor="Hand" FontWeight="SemiBold"/>
-        <Label x:Name="l_website" Style="{DynamicResource MyLabel}" Content="WEBSITE  •   " HorizontalAlignment="Left" Margin="556,94,0,0" VerticalAlignment="Top" Foreground="#FF434545" Cursor="Hand" FontFamily="Gilroy" FontStretch="Normal" FontWeight="SemiBold" FontSize="11" RenderTransformOrigin="1,0" MouseDown="l_website_MouseDown"/>
-        <Label x:Name="l_blog"    Style="{DynamicResource MyLabel}" Content="BLOG   •   " HorizontalAlignment="Left" Margin="622,94,0,0" VerticalAlignment="Top" Foreground="#FF3C3E3E" Cursor="Hand" FontFamily="Gilroy" FontSize="11" FontWeight="SemiBold" MouseDown="l_blog_MouseDown"/>
-        <Label x:Name="l_help"    Style="{DynamicResource MyLabel}" Content="HELP &amp; FAQ    " HorizontalAlignment="Left" Margin="673,94,0,0" VerticalAlignment="Top" Foreground="#FF3C3E3E" Width="97" Cursor="Hand" FontFamily="Gilroy" FontSize="11" FontWeight="SemiBold" MouseDown="l_help_MouseDown"/>
+        <Label x:Name="l_website" Style="{DynamicResource MyLabel}" Content="WEBSITE  •   " HorizontalAlignment="Left" Margin="556,94,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Cursor="Hand" FontFamily="Gilroy" FontStretch="Normal" FontWeight="SemiBold" FontSize="11" RenderTransformOrigin="1,0" MouseDown="l_website_MouseDown"/>
+        <Label x:Name="l_blog"    Style="{DynamicResource MyLabel}" Content="BLOG   •   " HorizontalAlignment="Left" Margin="622,94,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Cursor="Hand" FontFamily="Gilroy" FontSize="11" FontWeight="SemiBold" MouseDown="l_blog_MouseDown"/>
+        <Label x:Name="l_help"    Style="{DynamicResource MyLabel}" Content="HELP &amp; FAQ    " HorizontalAlignment="Left" Margin="673,94,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="97" Cursor="Hand" FontFamily="Gilroy" FontSize="11" FontWeight="SemiBold" MouseDown="l_help_MouseDown"/>
         <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="25" Margin="159,480,0,0" VerticalAlignment="Top" Width="567">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -43,7 +43,16 @@
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Label x:Name="b_play" Content="" HorizontalAlignment="Left" Margin="742,479,0,0" VerticalAlignment="Top" Height="47" Width="140" Cursor="Hand" MouseDown="b_play_MouseDown"/>
-        <Image x:Name="b_repear" Margin="800,65,110,482" Source="/Resources/Images/repear.png" Stretch="Fill" MouseDown="b_reapear_MouseDown" Cursor="Hand"/>
+        <Image x:Name="b_settings" Margin="800,65,110,482" Source="/Resources/Images/repear.png" Stretch="Fill" MouseDown="b_settings_MouseDown" Cursor="Hand" MouseEnter="b_settings_MouseEnter" MouseLeave="b_settings_MouseLeave"/>
+        <Label x:Name="l_play" Content="Label" HorizontalAlignment="Left" Margin="742,483,0,0" VerticalAlignment="Top" FontSize="18" Height="38" Width="139" HorizontalContentAlignment="Center" Foreground="#FF191919" FontWeight="Bold" MouseDown="l_play_MouseDown"/>
+        <Label x:Name="l_address" Style="{DynamicResource MyLabel}" Content="WEBSITE  •   " HorizontalAlignment="Left" Margin="152,74,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Cursor="Hand" FontFamily="Gilroy" FontStretch="Normal" FontWeight="SemiBold" FontSize="11" RenderTransformOrigin="1,0" MouseDown="l_website_MouseDown"/>
+        <Image x:Name="p_settings" Margin="50,-32,17,-55" Source="/Resources/Images/settings.png" Stretch="Fill" MouseDown="b_settings_MouseDown"/>
+        <Image x:Name="b_settings_close" Margin="633,236,277,311" Source="/Resources/Images/close.png" Stretch="Fill" MouseEnter="b_settings_close_MouseEnter" MouseLeave="b_settings_close_MouseLeave" Cursor="Hand" MouseDown="b_settings_close_MouseDown"/>
+        <Label x:Name="setting_text"    Style="{DynamicResource MyLabel}" Content="Settings" HorizontalAlignment="Left" Margin="350,253,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="97" Cursor="" FontFamily="Gilroy" FontSize="18" FontWeight="SemiBold"/>
+        <Label x:Name="settings_folder"    Style="{DynamicResource MyLabel}" Content="Donwload Folder" HorizontalAlignment="Left" Margin="350,291,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="97" Cursor="" FontFamily="Gilroy" FontWeight="SemiBold" FontSize="11"/>
+        <TextBlock x:Name="directory_dialog" HorizontalAlignment="Left" Margin="450,292,0,0" TextWrapping="NoWrap" Text="TextBlock" VerticalAlignment="Top" Height="22" Width="142" Background="Black" Foreground="White"/>
+        <Image x:Name="open_directory" Margin="598,294,308,266" Source="/Resources/Images/open_directory.png" Stretch="Fill" Cursor="Hand" MouseDown="open_directory_MouseDown"/>
+        <Image x:Name="b_repear" Margin="449,336,350,203" Source="/Resources/Images/button.png" Stretch="Fill"/>
+        <Label x:Name="repear"    Style="{DynamicResource MyLabel}" Content="Repair" HorizontalAlignment="Left" Margin="456,340,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="130" Cursor="Hand" FontFamily="Gilroy" FontSize="18" FontWeight="SemiBold" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" MouseDown="repear_MouseDown"/>
     </Grid>
 </Window>

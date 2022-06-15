@@ -10,5 +10,12 @@ namespace KryxiviaUpdater.Builder
     {
         public string URL { get; set; } = "";
         public string PathFolder { get; set; } = "";
+
+        public string Server { get; set; } = "";
+        public int Port { get; set; }
+        public string User { get; set; } = "";
+        public string Password { get; set; } = "";
+
+        public string SftpPath { get; set; } = "";
     }
 }
