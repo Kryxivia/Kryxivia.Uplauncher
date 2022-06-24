@@ -53,11 +53,11 @@ namespace KryxiviaUpdater
             });
 
             _timer.Interval = 10000;
-            _timer.Enabled = true;
+            _timer.Enabled = true; 
 
             _updater = new Updater.Updater("client", "versionApp.json", UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
-            _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "http://93.23.21.204/"
-                ,UpdateState, UpdateAddress);
+            _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "https://auth-app.kryxivia.io/"
+                , UpdateState, UpdateAddress);
             _imagesNews = new Dictionary<int, Image>()
             {
                 {0, b_news1},
@@ -330,8 +330,12 @@ namespace KryxiviaUpdater
         {
             if (File.Exists(_pathKryxivia) && _updaterState == UpdaterState.Playing)
             {
-                Process.Start(_pathKryxivia);
-            }else if(_updaterState == UpdaterState.Connecting)
+                Process kryxivia = new Process();
+                kryxivia.StartInfo.FileName = _pathKryxivia;
+                kryxivia.StartInfo.Arguments = string.Format("token \"{0}\"", _kryxiviaAPI.jwtRaw);
+                kryxivia.Start();
+            }
+            else if(_updaterState == UpdaterState.Connecting)
             {
                 _kryxiviaAPI.OpenWebSite();
             }
@@ -346,7 +350,11 @@ namespace KryxiviaUpdater
         {
             if (File.Exists(_pathKryxivia) && _updaterState == UpdaterState.Playing)
             {
-                Process.Start(_pathKryxivia);
+                Process kryxivia = new Process();
+                kryxivia.StartInfo.FileName = _pathKryxivia;
+
+                kryxivia.StartInfo.Arguments = string.Format("token \"{0}\"", _kryxiviaAPI.jwtRaw);
+                kryxivia.Start();
             }
             else if (_updaterState == UpdaterState.Connecting)
             {

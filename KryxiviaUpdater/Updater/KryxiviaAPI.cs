@@ -18,6 +18,8 @@ namespace KryxiviaUpdater.Updater
         private Task? _authPooler;
         private Action<UpdaterState> _updateState;
         private Action<string> _updateAddress;
+        public JwtSecurityToken jwtSecurityToken;
+        public string jwtRaw;
         public LoginToken? LoginToken
         {
             get;
@@ -49,14 +51,15 @@ namespace KryxiviaUpdater.Updater
                 return UpdaterState.Connecting;
             else
             {
-                var jwtToken = new JwtSecurityToken(LoginToken?.jwtAttached);
-                if (DateTime.Now > jwtToken.ValidTo)
+                jwtRaw = LoginToken.jwtAttached;
+                jwtSecurityToken = new JwtSecurityToken(LoginToken?.jwtAttached);
+                if (DateTime.Now > jwtSecurityToken.ValidTo)
                 {
                     return UpdaterState.Connecting;
                 }
                 else
                 {
-                    var publicKey = jwtToken.Claims.First(x => x.Type == "publickey");
+                    var publicKey = jwtSecurityToken.Claims.First(x => x.Type == "publickey");
                     _updateAddress(publicKey.Value);
                     return UpdaterState.Playing;
                 }
@@ -116,8 +119,9 @@ namespace KryxiviaUpdater.Updater
                         callback = await CallBackAuthentification();
                     }
                     File.WriteAllText("kryxiviaToken.json", JsonConvert.SerializeObject(callback));
-                    var jwtToken = new JwtSecurityToken(callback?.jwtAttached);
-                    var publicKey = jwtToken.Claims.First(x => x.Type == "publickey");
+                    jwtSecurityToken = new JwtSecurityToken(callback?.jwtAttached);
+                    jwtRaw = callback?.jwtAttached;
+                    var publicKey = jwtSecurityToken.Claims.First(x => x.Type == "publickey");
                     _updateAddress(publicKey.Value);
                     _updateState(UpdaterState.Playing);
                     _authPooler = null;
