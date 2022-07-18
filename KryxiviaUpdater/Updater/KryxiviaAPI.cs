@@ -15,10 +15,10 @@ namespace KryxiviaUpdater.Updater
     {
         private string _urlApi;
         private string _websiteAuthentification;
-        private Task? _authPooler;
+        private Task _authPooler;
         private Action<UpdaterState> _updateState;
         private Action<string> _updateAddress;
-        public LoginToken? LoginToken
+        public LoginToken LoginToken
         {
             get;
             private set;
@@ -38,7 +38,7 @@ namespace KryxiviaUpdater.Updater
         public async Task<UpdaterState> Setup()
         {
             if (File.Exists("kryxiviaToken.json"))
-                LoginToken = JsonConvert.DeserializeObject<LoginToken?>(File.ReadAllText("kryxiviaToken.json"));
+                LoginToken = JsonConvert.DeserializeObject<LoginToken>(File.ReadAllText("kryxiviaToken.json"));
 
             while (LoginToken == null)
             {
@@ -73,10 +73,10 @@ namespace KryxiviaUpdater.Updater
                 result = await client.GetStringAsync(tokenApiUrl);
             }
 
-            LoginToken = JsonConvert.DeserializeObject<LoginToken?>(result);
+            LoginToken = JsonConvert.DeserializeObject<LoginToken>(result);
         }
 
-        public async Task<LoginToken?> CallBackAuthentification()
+        public async Task<LoginToken> CallBackAuthentification()
         {
             var tokenApiUrl = $"{_urlApi}api/v1/login/token_auth";
             var result = "";
@@ -94,7 +94,7 @@ namespace KryxiviaUpdater.Updater
                 }
             }
 
-            return JsonConvert.DeserializeObject<LoginToken?>(result);
+            return JsonConvert.DeserializeObject<LoginToken>(result);
         }
 
         public void OpenWebSite()

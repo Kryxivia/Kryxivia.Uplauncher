@@ -2,31 +2,57 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\Images\kryx-avatar.ico</ApplicationIcon>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Fonts\Gilroy-Bold.ttf" />
+    <None Remove="Resources\Fonts\Gilroy-Medium.ttf" />
     <None Remove="Resources\bg.png" />
     <None Remove="Resources\close.png" />
     <None Remove="Resources\Fonts\FontsFree-Net-Gilroy3.ttf" />
-    <None Remove="Resources\Fonts\Gambetta-Semibold.otf" />
-    <None Remove="Resources\Fonts\Gilroy-Medium.ttf" />
+    <None Remove="Resources\Fonts\Sentient-Medium.otf" />
+    <None Remove="Resources\Fonts\Sentient-Regular.otf" />
     <None Remove="Resources\Images\bg_connect.png" />
     <None Remove="Resources\Images\bg_content.png" />
     <None Remove="Resources\Images\bg_play.png" />
     <None Remove="Resources\Images\button.png" />
     <None Remove="Resources\Images\close_over.png" />
+    <None Remove="Resources\Images\discord.png" />
+    <None Remove="Resources\Images\explorer.png" />
+    <None Remove="Resources\Images\explorer_over.png" />
+    <None Remove="Resources\Images\folder.png" />
+    <None Remove="Resources\Images\folder_over.png" />
+    <None Remove="Resources\Images\instagram.png" />
+    <None Remove="Resources\Images\news.png" />
     <None Remove="Resources\Images\open_directory.png" />
     <None Remove="Resources\Images\play.png" />
     <None Remove="Resources\Images\play_disabled.png" />
+    <None Remove="Resources\Images\play_over.png" />
     <None Remove="Resources\Images\reduce_over.png" />
     <None Remove="Resources\Images\repear.png" />
     <None Remove="Resources\Images\repear_over.png" />
+    <None Remove="Resources\Images\rep_button.png" />
+    <None Remove="Resources\Images\rep_button_over.png" />
     <None Remove="Resources\Images\settings.png" />
+    <None Remove="Resources\Images\settings_bg.png" />
+    <None Remove="Resources\Images\settings_bg_black.png" />
+    <None Remove="Resources\Images\sign_in.png" />
+    <None Remove="Resources\Images\sign_in_over.png" />
+    <None Remove="Resources\Images\Social\discord_over.png" />
+    <None Remove="Resources\Images\Social\instagram_over.png" />
+    <None Remove="Resources\Images\Social\telegram_over.png" />
+    <None Remove="Resources\Images\Social\twitter_over.png" />
+    <None Remove="Resources\Images\Social\world-wide-web_over.png" />
+    <None Remove="Resources\Images\Social\youtube_over.png" />
+    <None Remove="Resources\Images\telegram.png" />
+    <None Remove="Resources\Images\trailer.png" />
+    <None Remove="Resources\Images\twitter.png" />
+    <None Remove="Resources\Images\world-wide-web.png" />
+    <None Remove="Resources\Images\youtube.png" />
     <None Remove="Resources\news_body.png" />
     <None Remove="Resources\news_ellipse.png" />
     <None Remove="Resources\news_ellipse1.png" />
@@ -34,7 +60,32 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Fonts\Gilroy-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Gilroy-Medium.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resources\Images\kryx-avatar.ico" />
+    <Resource Include="Resources\Images\explorer.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\explorer_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\sign_in_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\rep_button_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Sentient-Medium.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\Sentient-Regular.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\trailer.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,12 +99,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Fonts\Gambetta-Semibold.otf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\Fonts\Gilroy-Medium.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\Images\bg.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -75,6 +120,30 @@
     <Resource Include="Resources\Images\close_over.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\folder.png" />
+    <Resource Include="Resources\Images\folder_over.png" />
+    <Resource Include="Resources\Images\news.png" />
+    <Resource Include="Resources\Images\play_disabled.png" />
+    <Resource Include="Resources\Images\play_over.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\rep_button.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\settings_bg.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\settings_bg_black.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\sign_in.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\discord.png" />
+    <Resource Include="Resources\Images\Social\discord_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\instagram.png" />
     <Resource Include="Resources\Images\news_body.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -90,9 +159,6 @@
     <Resource Include="Resources\Images\play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resources\Images\play_disabled.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Resources\Images\reduce.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -106,6 +172,29 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Images\settings.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\instagram_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\telegram.png" />
+    <Resource Include="Resources\Images\Social\telegram_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\twitter.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\twitter_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\world-wide-web.png" />
+    <Resource Include="Resources\Images\Social\world-wide-web_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\youtube.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\Social\youtube_over.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

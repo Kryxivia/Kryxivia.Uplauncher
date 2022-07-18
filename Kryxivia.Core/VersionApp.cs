@@ -12,12 +12,11 @@ namespace KryxiviaUpdater.Core
         public string Checksum { get; set; } = "";
         public string FilePath { get; set; } = "";
 
-        public bool Equals(FileCheckSum obj) => Checksum == obj.Checksum && FilePath == obj.FilePath;
+        public bool Equals(FileCheckSum obj) => Checksum == obj.Checksum;
         public override int GetHashCode()
         {
             int hash = 19;
             hash *=  23 + Checksum.GetHashCode();
-            hash *=  23 + FilePath.GetHashCode();
             return hash;
         }
     }
@@ -27,6 +26,7 @@ namespace KryxiviaUpdater.Core
         public List<string> Versions { get; set; } = new List<string>();
         public List<string> NotYetUploaded { get; set; } = new List<string>();
         public List<FileCheckSum> FilesChecksum { get; set; } = new List<FileCheckSum>();
-        public string Path { get; set; } = Directory.GetCurrentDirectory();
+        public string DownloadFolder { get; set; } = Directory.GetCurrentDirectory();
+        public string TmpFolder { get; set; } = Directory.GetCurrentDirectory();
     }
 }

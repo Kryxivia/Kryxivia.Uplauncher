@@ -15,29 +15,40 @@ namespace KryxiviaUpdater.Updater
     public class Updater
     {
         private string _pathVersion;
-        private VersionApp? _clientVersionApp, _serverVersionApp;
+        private VersionApp _clientVersionApp, _serverVersionApp;
         private const string _urlServer = "http://144.91.65.207/";
-        private Action<int, int> _updateVersionProgress;
+        private Action<int, int, string> _updateVersionProgress;
         private Action<int> _updatePercentProgress;
-        private Action<NewsList?> _setNewsList;
+        private Action<NewsList> _setNewsList;
         private Action _unzipFileLog;
         private string _kryxiviaFolder;
         public IEnumerable<FileCheckSum> FilesToDownload { get; set; }
         public List<string> VersionsToDownload { get;set; }
-        public string CurrentPath
+        public string DownloadFolder
         {
             get
             {
-                return _clientVersionApp.Path;
+                return _clientVersionApp.DownloadFolder;
             }
             set
             {
-                _clientVersionApp.Path = value;
+                _clientVersionApp.DownloadFolder = value;
+            }
+        }
+        public string TmpFolder
+        {
+            get
+            {
+                return _clientVersionApp.TmpFolder;
+            }
+            set
+            {
+                _clientVersionApp.TmpFolder = value;
             }
         }
         public Updater(string kryxiviaFolder, string pathVersion,
-            Action<int, int> updateVersionProgress, Action<int> updatePourcentProgress,
-            Action<NewsList?> setNewsList, Action unzipFileLog)
+            Action<int, int, string> updateVersionProgress, Action<int> updatePourcentProgress,
+            Action<NewsList> setNewsList, Action unzipFileLog)
         {
             _pathVersion = pathVersion;
             _clientVersionApp = null;
@@ -52,15 +63,21 @@ namespace KryxiviaUpdater.Updater
         public async Task<UpdaterState> Setup()
         {
             _setNewsList(await GetServerNews());
+            return await CheckUpdate();
+
+        }
+
+        public async Task<UpdaterState> CheckUpdate()
+        {
             if (!File.Exists(_pathVersion)) File.WriteAllText(_pathVersion, JsonConvert.SerializeObject(new VersionApp()));
             _clientVersionApp = JsonConvert.DeserializeObject<VersionApp>(File.ReadAllText(_pathVersion));
             _serverVersionApp = await GetServerVersionApp();
-            if(_clientVersionApp != null & _serverVersionApp != null)
+            if (_clientVersionApp != null & _serverVersionApp != null)
             {
-                if(_serverVersionApp?.Versions.Count != _clientVersionApp?.Versions.Count)
+                if (_serverVersionApp?.Versions.Count != _clientVersionApp?.Versions.Count)
                 {
                     // first time we download directly base
-                    if(_clientVersionApp.Versions.Count == 0)
+                    if (_clientVersionApp.Versions.Count == 0)
                     {
                         VersionsToDownload = new List<string> { "0.0.0" };
                     }
@@ -78,7 +95,8 @@ namespace KryxiviaUpdater.Updater
         public async Task<UpdaterState> RepairClients()
         {
             var currentFilesChecksum = new List<FileCheckSum>();
-            foreach (var file in Directory.GetFiles(_kryxiviaFolder, "*.*", SearchOption.AllDirectories))
+            foreach (var file in Directory.GetFiles(
+                Path.Combine(new string[] {DownloadFolder, _kryxiviaFolder }), "*.*", SearchOption.AllDirectories))
             {
                 currentFilesChecksum.Add(new FileCheckSum
                 {
@@ -94,14 +112,21 @@ namespace KryxiviaUpdater.Updater
                 var downloadFileUrl = $"{_urlServer}{file.FilePath}";
                 var destinationFilePath = Path.GetFullPath(file.FilePath);
 
-                    var directoryPath = Path.GetDirectoryName(destinationFilePath);
-                    Directory.CreateDirectory(directoryPath);
-
+                var directoryPath = Path.GetDirectoryName(destinationFilePath);
+                Directory.CreateDirectory(directoryPath);
+                var speedCache = "";
                 using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                 {
-                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
-                        _updateVersionProgress(count, files.Count());
+                    client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) =>
+                    {
+                        _updateVersionProgress(count, files.Count(), speedCache);
                         _updatePercentProgress((int)progressPercentage);
+                    };
+
+                    client.SpeedChanged += (speed) =>
+                    {
+                        speedCache = speed;
+                        _updateVersionProgress(count, files.Count(), speed);
                     };
 
                     await client.StartDownload();
@@ -124,18 +149,26 @@ namespace KryxiviaUpdater.Updater
                 {
                     var downloadFileUrl = $"{_urlServer}{version}/{i}.zip";
                     string destinationFilePath = System.IO.Path.Combine(new string[] {
-                    System.IO.Path.GetTempPath(),
+                    TmpFolder,
                     $"{i}.zip" });
 
+                    var speedCache = "";
 
                     using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                     {
-                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage) => {
-                            _updateVersionProgress(i + 1, filesVersion);
+                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) => {
+                            _updateVersionProgress(i + 1, filesVersion, speedCache);
                             _updatePercentProgress((int)progressPercentage);
                         };
 
+                        client.SpeedChanged += (speed) =>
+                        {
+                            speedCache = speed;
+                            _updateVersionProgress(i, filesVersion, speed);
+                        };
+
                         await client.StartDownload();
+                        _updateVersionProgress(i + 1, filesVersion, "");
                         UnzipArchive(destinationFilePath);
                     }
                 }
@@ -151,7 +184,8 @@ namespace KryxiviaUpdater.Updater
         private void UnzipArchive(string pathArchive)
         {
             _unzipFileLog();
-            ZipFile.ExtractToDirectory(pathArchive, Directory.GetCurrentDirectory(), true);
+            ZipFile.ExtractToDirectory(pathArchive, DownloadFolder);
+            File.Delete(pathArchive);
         }
 
         public void WriteProgressDownload()
@@ -161,11 +195,17 @@ namespace KryxiviaUpdater.Updater
 
         public void WriteServerChecksumFile()
         {
+            _serverVersionApp.TmpFolder = _clientVersionApp.TmpFolder;
+            _serverVersionApp.DownloadFolder = _clientVersionApp.DownloadFolder;
             File.WriteAllText(_pathVersion, JsonConvert.SerializeObject(_serverVersionApp));
         }
 
+        public void StartAutomaticUpdate()
+        {
 
-        private async Task<VersionApp?> GetServerVersionApp()
+        }
+
+        private async Task<VersionApp> GetServerVersionApp()
         {
             var versionAppContents = $"{_urlServer}/versionApp.json";
             var result = "";
@@ -190,7 +230,7 @@ namespace KryxiviaUpdater.Updater
         }
 
 
-        private async Task<NewsList?> GetServerNews()
+        private async Task<NewsList> GetServerNews()
         {
             var newsContents = $"{_urlServer}/news.json";
             var result = "";

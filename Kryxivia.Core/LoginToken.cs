@@ -11,6 +11,6 @@ namespace KryxiviaUpdater.Core
         public string tokenHash { get; set; }
         public string date { get; set; }
         public bool validated { get; set; }
-        public string? jwtAttached { get; set; }
+        public string jwtAttached { get; set; }
     }
 }

@@ -9,50 +9,51 @@
     <Window.Foreground>
         <ImageBrush/>
     </Window.Foreground>
+
     <Window.Background>
-        <ImageBrush ImageSource="/Resources/Images/bg.png"/>
+        <ImageBrush/>
     </Window.Background>
     <Grid Margin="4,0,-4,0">
-        <Label x:Name="l_version" Content="Label" HorizontalAlignment="Left" Margin="155,509,0,0" VerticalAlignment="Top" Foreground="#FF474442" FontFamily="Gilroy" FontWeight="Regular" />
-        <Label x:Name="l_pourcent" Content="Label" HorizontalAlignment="Left" Margin="570,510,0,0" VerticalAlignment="Top" Foreground="#2e6339" Width="163" HorizontalContentAlignment="Right" FontFamily="Gilroy" FontWeight="Regular" />
-        <ProgressBar x:Name="p_progressBar" HorizontalAlignment="Left" Height="25" Margin="90,597,0,0" VerticalAlignment="Top" Width="567"/>
-        <Image x:Name="b_close" Margin="864,65,46,482" Source="/Resources/Images/close.png" Stretch="Fill" Cursor="Hand" MouseDown="b_close_MouseDown" Width="32" Height="32" MouseEnter="b_close_MouseEnter" MouseLeave="b_close_MouseLeave"/>
-        <Image x:Name="b_reduce" Margin="832,65,78,482" Source="/Resources/Images/reduce.png" Stretch="Fill" Cursor="Hand" MouseDown="b_reduce_MouseDown" Height="32" Width="32" MouseEnter="b_reduce_MouseEnter" MouseLeave="b_reduce_MouseLeave"/>
-        <Image Margin="529,108,41,317" Source="/Resources/Images/news_body.png" Stretch="Fill"/>
-        <Image x:Name="b_news1" Cursor="Hand"  Margin="575,145,353,420" Source="/Resources/Images/news_ellipse1.png" Stretch="Fill" MouseDown="b_news1_MouseDown" Width="14" Height="14"/>
-        <Image x:Name="b_news2" Cursor="Hand"  Margin="591,145,337,420" Source="/Resources/Images/news_ellipse1.png" Stretch="Fill" MouseDown="b_news2_MouseDown" Width="14" Height="14"/>
-        <Image x:Name="b_news3" Cursor="Hand"  Margin="606,145,322,420" Source="/Resources/Images/news_ellipse1.png" Stretch="Fill" MouseDown="b_news3_MouseDown" Width="14" Height="14"/>
-        <TextBlock x:Name="t_news" HorizontalAlignment="Left" Margin="578,164,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="55" Width="293" Foreground="#FFD0D0D0" FontSize="17" RenderTransformOrigin="0.5,0.5" FontFamily="Gambetta Semibold" FontStyle="Normal" FontWeight="Regular" TextDecorations="{x:Null}" FontStretch="Medium">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform AngleY="-0.355"/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="-0.794"/>
-                </TransformGroup>
-            </TextBlock.RenderTransform><Run Text="Launch of Kryxivia on its desktop "/><LineBreak/><Run Text="version with our new launcher!"/></TextBlock>
-        <Label x:Name="l_news" Content="Label" HorizontalAlignment="Left" Margin="621,140,0,0" VerticalAlignment="Top" FontSize="11" Foreground="#FF3C3E3E" FontFamily="Gilroy" FontStyle="Normal" Cursor="Hand" FontWeight="SemiBold"/>
-        <Label x:Name="l_website" Style="{DynamicResource MyLabel}" Content="WEBSITE  •   " HorizontalAlignment="Left" Margin="556,94,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Cursor="Hand" FontFamily="Gilroy" FontStretch="Normal" FontWeight="SemiBold" FontSize="11" RenderTransformOrigin="1,0" MouseDown="l_website_MouseDown"/>
-        <Label x:Name="l_blog"    Style="{DynamicResource MyLabel}" Content="BLOG   •   " HorizontalAlignment="Left" Margin="622,94,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Cursor="Hand" FontFamily="Gilroy" FontSize="11" FontWeight="SemiBold" MouseDown="l_blog_MouseDown"/>
-        <Label x:Name="l_help"    Style="{DynamicResource MyLabel}" Content="HELP &amp; FAQ    " HorizontalAlignment="Left" Margin="673,94,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="97" Cursor="Hand" FontFamily="Gilroy" FontSize="11" FontWeight="SemiBold" MouseDown="l_help_MouseDown"/>
-        <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="25" Margin="159,480,0,0" VerticalAlignment="Top" Width="567">
+        <ProgressBar x:Name="progress" HorizontalAlignment="Left" Height="25" Margin="86,489,0,0" VerticalAlignment="Top" Width="605">
             <ProgressBar.Foreground>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FF2F5132"/>
-                    <GradientStop Color="#FF317037" Offset="1"/>
+                    <GradientStop Color="#6f9419"/>
+                    <GradientStop Color="#6f9419" Offset="1"/>
                 </LinearGradientBrush>
             </ProgressBar.Foreground>
         </ProgressBar>
-        <Image x:Name="b_settings" Margin="800,65,110,482" Source="/Resources/Images/repear.png" Stretch="Fill" MouseDown="b_settings_MouseDown" Cursor="Hand" MouseEnter="b_settings_MouseEnter" MouseLeave="b_settings_MouseLeave"/>
-        <Label x:Name="l_play" Content="Label" HorizontalAlignment="Left" Margin="742,483,0,0" VerticalAlignment="Top" FontSize="18" Height="38" Width="139" HorizontalContentAlignment="Center" Foreground="#FF191919" FontWeight="Bold" MouseDown="l_play_MouseDown"/>
-        <Label x:Name="l_address" Style="{DynamicResource MyLabel}" Content="WEBSITE  •   " HorizontalAlignment="Left" Margin="152,74,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Cursor="Hand" FontFamily="Gilroy" FontStretch="Normal" FontWeight="SemiBold" FontSize="11" RenderTransformOrigin="1,0" MouseDown="l_website_MouseDown"/>
-        <Image x:Name="p_settings" Margin="50,-32,17,-55" Source="/Resources/Images/settings.png" Stretch="Fill" MouseDown="b_settings_MouseDown"/>
-        <Image x:Name="b_settings_close" Margin="633,236,277,311" Source="/Resources/Images/close.png" Stretch="Fill" MouseEnter="b_settings_close_MouseEnter" MouseLeave="b_settings_close_MouseLeave" Cursor="Hand" MouseDown="b_settings_close_MouseDown"/>
-        <Label x:Name="setting_text"    Style="{DynamicResource MyLabel}" Content="Settings" HorizontalAlignment="Left" Margin="350,253,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="97" Cursor="" FontFamily="Gilroy" FontSize="18" FontWeight="SemiBold"/>
-        <Label x:Name="settings_folder"    Style="{DynamicResource MyLabel}" Content="Donwload Folder" HorizontalAlignment="Left" Margin="350,291,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="97" Cursor="" FontFamily="Gilroy" FontWeight="SemiBold" FontSize="11"/>
-        <TextBlock x:Name="directory_dialog" HorizontalAlignment="Left" Margin="450,292,0,0" TextWrapping="NoWrap" Text="TextBlock" VerticalAlignment="Top" Height="22" Width="142" Background="Black" Foreground="White"/>
-        <Image x:Name="open_directory" Margin="598,294,308,266" Source="/Resources/Images/open_directory.png" Stretch="Fill" Cursor="Hand" MouseDown="open_directory_MouseDown"/>
-        <Image x:Name="b_repear" Margin="449,336,350,203" Source="/Resources/Images/button.png" Stretch="Fill"/>
-        <Label x:Name="repear"    Style="{DynamicResource MyLabel}" Content="Repair" HorizontalAlignment="Left" Margin="456,340,0,0" VerticalAlignment="Top" Foreground="#FFA8A7B0" Width="130" Cursor="Hand" FontFamily="Gilroy" FontSize="18" FontWeight="SemiBold" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" MouseDown="repear_MouseDown"/>
+        <Image  Source="/Resources/Images/bg.png" Height="579" Width="942" Stretch="Fill" Margin="-3,-1,3,1" />
+        <TextBlock   x:Name="l_version" Text="Label" HorizontalAlignment="Left" Margin="59,521,0,0" VerticalAlignment="Top" Foreground="#FFD9C8B4" FontFamily="{StaticResource Gilroy}" FontWeight="Medium" FontSize="13" />
+        <TextBlock x:Name="l_pourcent" Text="Label" HorizontalAlignment="Left" Margin="493,520,0,0" VerticalAlignment="Top" Foreground="#FFD9C8B4" Width="199" FontFamily="{StaticResource Sentient}" FontWeight="Medium" FontSize="14" TextAlignment="Right" />
+        <Image x:Name="b_close" Margin="844,15,83,549" Source="/Resources/Images/close.png" Stretch="Fill" Cursor="Hand" MouseDown="b_close_MouseDown" Width="10" Height="10" MouseEnter="b_close_MouseEnter" MouseLeave="b_close_MouseLeave"/>
+        <Image x:Name="b_reduce" Margin="815,22,106,554" Source="/Resources/Images/reduce.png" Stretch="Fill" Cursor="Hand" MouseDown="b_reduce_MouseDown" Height="3" Width="15" MouseEnter="b_reduce_MouseEnter" MouseLeave="b_reduce_MouseLeave"/>
+        <Image x:Name="p_settings" Margin="-915,-45,982,-42" Source="/Resources/Images/settings.png" Stretch="Fill" MouseDown="b_settings_MouseDown"/>
+        <Image x:Name="website" Margin="902,66,25,498" Stretch="Fill" Source="/Resources/Images/Social/world-wide-web.png" Width="15" Height="15" MouseEnter="website_MouseEnter" MouseLeave="website_MouseLeave" MouseDown="website_MouseDown" Cursor="Hand"/>
+        <Image x:Name="instagram" Margin="903,88,26,478" Stretch="Fill" Source="/Resources/Images/Social/instagram.png" Width="13" Height="13" Cursor="Hand" MouseEnter="instagram_MouseEnter" MouseLeave="instagram_MouseLeave" MouseDown="instagram_MouseDown"  />
+        <Image x:Name="twitter" Margin="902,109,25,457" Stretch="Fill" Source="/Resources/Images/Social/twitter.png" Width="15" Height="13" Cursor="Hand" MouseEnter="twitter_MouseEnter" MouseLeave="twitter_MouseLeave" MouseDown="twitter_MouseDown" />
+        <Image x:Name="telegram" Margin="899,129,26,435" Stretch="Fill" Source="/Resources/Images/Social/telegram.png" Width="15" Height="15" Cursor="Hand" MouseEnter="telegram_MouseEnter" MouseLeave="telegram_MouseLeave" MouseDown="telegram_MouseDown"  />
+        <Image x:Name="discord" Margin="900,150,24,414" Stretch="Fill" Source="/Resources/Images/Social/discord.png" Width="18" Height="14" Cursor="Hand" MouseEnter="discord_MouseEnter" MouseLeave="discord_MouseLeave" MouseDown="discord_MouseDown" />
+        <Image x:Name="youtube" Margin="901,175,24,389" Stretch="Fill" Source="/Resources/Images/Social/youtube.png" Width="17" Height="15" Cursor="Hand" MouseEnter="youtube_MouseEnter" MouseLeave="youtube_MouseLeave" MouseDown="instagram_MouseDown" />
+        <Image x:Name="l_play" Margin="716,496,22,25" Stretch="Fill" Source="/Resources/Images/play_disabled.png" MouseDown="l_play_MouseDown" MouseEnter="l_play_MouseEnter" MouseLeave="l_play_MouseLeave"/>
+        <Image x:Name="b_settings" Margin="64,497,864,67" Width="15" Height="15" Stretch="Fill" Source="/Resources/Images/repear.png" Cursor="Hand" MouseLeave="b_settings_MouseLeave" MouseEnter="b_settings_MouseEnter" MouseDown="b_settings_MouseDown"/>
+        <Image Margin="38,341,506,93" Stretch="Fill" Source="/Resources/Images/news.png"/>
+        <Image MouseDown="trailer_MouseDown" Margin="428,342,208,93" Source="/Resources/Images/trailer.png" Stretch="Fill" Cursor="Hand"/>
+        <TextBlock x:Name="l_latest_news" HorizontalAlignment="Left" Margin="165,324,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource Gilroy}" FontWeight="Bold" Foreground="#FF806B53" FontStretch="Normal" Width="130"><Run Text="L"/><Run Text=" "/><Run Text="A"/><Run Text=" "/><Run Text="T"/><Run Text=" "/><Run Text="E"/><Run Text=" "/><Run Text="S"/><Run Text=" "/><Run Text="T "/><Run Text=" "/><Run Language="fr-fr" Text=" "/><Run Text="N"/><Run Text=" "/><Run Text="E"/><Run Text=" "/><Run Text="W"/><Run Text=" "/><Run Text="S"/><Run Text=" "/></TextBlock>
+        <TextBlock x:Name="watch_trailer" HorizontalAlignment="Left" Margin="506,324,0,0" VerticalAlignment="Top" FontSize="14" FontFamily="{StaticResource Gilroy}" FontWeight="Bold" Foreground="#FF806B53" FontStretch="Normal" Width="162"><Run Language="fr-fr" Text="W A T C H   T R A I L E R"/><LineBreak/><Run Language="fr-fr"/></TextBlock>
+        <TextBlock x:Name="t_news" HorizontalAlignment="Left" Margin="72,363,0,0" VerticalAlignment="Top" FontSize="16" Foreground="#FFD9C8B4" Height="82" Width="341" TextAlignment="Center" LineHeight="Auto" TextWrapping="Wrap" Text="Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab " FontFamily="{StaticResource Sentient}" FontWeight="Regular"/>
+        <TextBlock x:Name="t_news_date" HorizontalAlignment="Left" Margin="65,424,0,0" VerticalAlignment="Top" FontSize="17" Foreground="#FFE8328C" Height="29" Width="343" TextAlignment="Center" LineHeight="Auto" TextWrapping="Wrap" Text="June 11, 2022" FontFamily="Sentient Medium"/>
+        <TextBlock x:Name="l_address" FontFamily="{StaticResource Gilroy}" FontWeight="Medium" Text="Label" HorizontalAlignment="Left" Margin="24,13,0,0" VerticalAlignment="Top" Foreground="#FFD9C8B4"/>
+        <Image x:Name="settings_bg_black"  Margin="-6,-5,6,5" Stretch="Fill" Height="579" Width="942" Source="/Resources/Images/settings_bg_black.png"/>
+        <Image x:Name="settings_bg" Margin="169,125,213,164" Stretch="Fill" Source="/Resources/Images/settings_bg.png"/>
+        <Image x:Name="settings_close" Margin="682,154,249,413" Source="/Resources/Images/close.png" Stretch="Fill" Cursor="Hand" MouseDown="settings_close_MouseDown" MouseEnter="settings_close_MouseEnter" MouseLeave="settings_close_MouseLeave"/>
+        <Image x:Name="repear" Margin="541,301,255,238" Stretch="Fill" Source="/Resources/Images/rep_button.png" MouseDown="repear_MouseDown" Cursor="Hand" MouseEnter="repear_MouseEnter" MouseLeave="repear_MouseLeave"/>
+        <Image x:Name="explorer" Margin="204,300,592,239" Stretch="Fill" Source="/Resources/Images/explorer.png" MouseDown="explorer_MouseDown" Cursor="Hand" MouseEnter="explorer_MouseEnter" MouseLeave="explorer_MouseLeave"/>
+        <Image x:Name="folder_file" Margin="660,214,262,349" Stretch="Fill" Source="/Resources/Images/folder.png" Cursor="Hand"  MouseDown="open_directory_download_MouseDown"  MouseEnter="folder_file_MouseEnter" MouseLeave="folder_file_MouseLeave"/>
+        <Image x:Name="folder_tmp"  Margin="660,260,262,303" Stretch="Fill" Source="/Resources/Images/folder.png"  Cursor="Hand" MouseDown="open_directory_tmp_MouseDown"  MouseEnter="folder_tmp_MouseEnter" MouseLeave="folder_tmp_MouseLeave"/>
+        <TextBlock x:Name="t_folder_file" HorizontalAlignment="Left" Margin="335,212,0,0" TextWrapping="NoWrap" Text="TextBlock" VerticalAlignment="Top" Width="306" Foreground="#FF897359" Height="20" FontFamily="{StaticResource Gilroy }" FontWeight="Regular"/>
+        <TextBlock x:Name="t_folder_tmp" HorizontalAlignment="Left" Margin="335,259,0,0" TextWrapping="NoWrap" Text="TextBlock" VerticalAlignment="Top" Width="306" Foreground="#FF897359" Height="20" FontFamily="{StaticResource Gilroy }" FontWeight="Regular"/>
+        <TextBlock x:Name="download_location" HorizontalAlignment="Left" Margin="202,210,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="306" Foreground="#FFD9C8B4" Height="20" FontFamily="{StaticResource Gilroy}" FontWeight="Regular" FontSize="14"><Run Text="Download "/><Run Language="fr-fr" Text="folder"/></TextBlock>
+        <TextBlock x:Name="tmp_location" HorizontalAlignment="Left" Margin="202,258,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="306" Foreground="#FFD9C8B4" Height="20" FontFamily="{StaticResource Gilroy}" FontWeight="Regular" FontSize="14"><Run Language="fr-fr" Text="Temporary"/><Run Text=" "/><Run Text="folder"/></TextBlock>
+
     </Grid>
 </Window>

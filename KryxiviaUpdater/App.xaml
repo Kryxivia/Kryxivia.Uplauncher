@@ -4,74 +4,7 @@
              xmlns:local="clr-namespace:KryxiviaUpdater"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <FontFamily x:Key="Gilroy">pack://application:,,,/Resources/Fonts/#Gilroy-Medium.ttf</FontFamily>
-        <FontFamily x:Key="Gambetta Semibold">pack://application:,,,/Resources/Fonts/#Gambetta-Semibold.otf</FontFamily>
-
-        <Style x:Key="MyLabel">
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
-                                <ColorAnimation To="#f0effc" Duration="0:0:0:01"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
-                                <ColorAnimation To="#a8a7b0" Duration="0:0:0:0"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="Play">
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
-                                <ColorAnimation To="#ffffff" Duration="0:0:0:1"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
-                                <ColorAnimation To="#a19d9d" Duration="0:0:0:1"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="Address">
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="Mouse.MouseEnter">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
-                                <ColorAnimation To="#FF787C7C" Duration="0:0:0:1"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="Mouse.MouseLeave">
-                    <EventTrigger.Actions>
-                        <BeginStoryboard>
-                            <Storyboard Storyboard.TargetProperty="(Foreground).(SolidColorBrush.Color)">
-                                <ColorAnimation To="#FF3C3E3E" Duration="0:0:0:1"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger.Actions>
-                </EventTrigger>
-            </Style.Triggers>
-        </Style>
+        <FontFamily x:Key="Gilroy">pack://application:,,,/Resources/Fonts/#Gilroy</FontFamily>
+        <FontFamily x:Key="Sentient">pack://application:,,,/Resources/Fonts/#Sentient</FontFamily>
     </Application.Resources>
 </Application>
