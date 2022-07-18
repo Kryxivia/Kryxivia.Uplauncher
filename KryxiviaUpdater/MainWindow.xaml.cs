@@ -73,7 +73,7 @@ namespace KryxiviaUpdater
             });
 
             _timer.Interval = 10000;
-            _timer.Enabled = true;
+            _timer.Enabled = true; 
 
             _updater = new Updater.Updater("client", "versionApp.json", UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
             _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "https://auth-app.kryxivia.io/"
@@ -314,6 +314,7 @@ namespace KryxiviaUpdater
             if (File.Exists(clientPath) && _updaterState == UpdaterState.Playing && _process == null)
             {
                 _process = Process.Start(clientPath);
+                _process.StartInfo.Arguments = string.Format("token \"{0}\"", _kryxiviaAPI.jwtRaw);
                 _process.EnableRaisingEvents = true;
                 _process.Exited += (s, m) =>
                 {
