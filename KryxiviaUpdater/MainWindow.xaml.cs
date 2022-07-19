@@ -42,6 +42,8 @@ namespace KryxiviaUpdater
         private UpdaterState _updaterState;
         private Process _process;
 
+        private int _timerToAutomaticUpdate = 10; // in minuts
+
         private const string _website = "https://www.google.com/";
         private const string _instagram = "https://www.google.com/";
         private const string _twitter = "https://www.google.com/";
@@ -55,11 +57,10 @@ namespace KryxiviaUpdater
             InitializeComponent();
             Initialize();
             _process = null;
-
             _timer = new Timer();
             _timer.Elapsed += new ElapsedEventHandler(async (o, e) =>
             {
-                if(_updaterState == UpdaterState.Playing || _updaterState == UpdaterState.Connecting)
+                if( _process == null && (_updaterState == UpdaterState.Playing || _updaterState == UpdaterState.Connecting))
                 {
                     _updaterState = await _updater.Setup();
                     if (_updaterState == Core.UpdaterState.Downloading)
@@ -71,14 +72,13 @@ namespace KryxiviaUpdater
                     UpdateState(_updaterState);
                 }
             });
-
-            _timer.Interval = 10000;
-            _timer.Enabled = true; 
+            _timer.Interval = TimeSpan.FromMinutes(_timerToAutomaticUpdate).TotalMilliseconds;
+            _timer.Enabled = true;
+            _timer.Stop();
 
             _updater = new Updater.Updater("client", "versionApp.json", UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
             _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "https://auth-app.kryxivia.io/"
                 , UpdateState, UpdateAddress);
-
             UpdateAddress("");
             Task.Run(async () =>
             {
@@ -90,6 +90,7 @@ namespace KryxiviaUpdater
                 }
                 _updaterState = await _kryxiviaAPI.Setup();
                 UpdateState(_updaterState);
+                RefreshAutomaticUpdate();
             });
 
         }
@@ -121,8 +122,11 @@ namespace KryxiviaUpdater
             tmp_location.Visibility = Visibility.Visible;
             download_location.Visibility= Visibility.Visible;
             explorer.Visibility = Visibility.Visible;
+            l_automatic_updater.Visibility = Visibility.Visible;
+            b_automatic_updater.Visibility=Visibility.Visible;
             t_folder_file.Text = _updater.DownloadFolder;
             t_folder_tmp.Text = _updater.TmpFolder;
+            RefreshAutomaticUpdate();
         }
 
         public void CloseSettings()
@@ -139,6 +143,22 @@ namespace KryxiviaUpdater
             tmp_location.Visibility = Visibility.Hidden;
             download_location.Visibility = Visibility.Hidden;
             explorer.Visibility = Visibility.Hidden;
+            l_automatic_updater.Visibility = Visibility.Hidden;
+            b_automatic_updater.Visibility = Visibility.Hidden;
+        }
+
+        private void RefreshAutomaticUpdate()
+        {
+            if (_updater.AutomaticUpdate)
+            {
+                b_automatic_updater.Source = new BitmapImage(new Uri("Resources/Images/automatic_update_activate.png", UriKind.Relative));
+                _timer.Start();
+            }
+            else
+            {
+                b_automatic_updater.Source = new BitmapImage(new Uri("Resources/Images/automatic_update.png", UriKind.Relative));
+                _timer.Stop();
+            }
         }
 
         public void UpdateVersionProgress(int start, int count, string speed)
@@ -566,6 +586,37 @@ namespace KryxiviaUpdater
         private void explorer_MouseLeave(object sender, MouseEventArgs e)
         {
             explorer.Source = new BitmapImage(new Uri("Resources/Images/explorer.png", UriKind.Relative));
+        }
+
+        private void automatic_updater_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (_updater.AutomaticUpdate)
+            {
+                b_automatic_updater.Source = new BitmapImage(new Uri("Resources/Images/automatic_update_activate_over.png", UriKind.Relative));
+            }
+            else
+            {
+                b_automatic_updater.Source = new BitmapImage(new Uri("Resources/Images/automatic_update_over.png", UriKind.Relative));
+            }
+        }
+
+        private void automatic_updater_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (_updater.AutomaticUpdate)
+            {
+                b_automatic_updater.Source = new BitmapImage(new Uri("Resources/Images/automatic_update_activate.png", UriKind.Relative));
+            }
+            else
+            {
+                b_automatic_updater.Source = new BitmapImage(new Uri("Resources/Images/automatic_update.png", UriKind.Relative));
+            }
+        }
+
+        private void automatic_update_MouseDown(object sender, MouseEventArgs e)
+        {
+            _updater.AutomaticUpdate = !_updater.AutomaticUpdate;
+            _updater.WriteProgressDownload();
+            RefreshAutomaticUpdate();
         }
 
         private void website_MouseDown(object sender, MouseEventArgs e)

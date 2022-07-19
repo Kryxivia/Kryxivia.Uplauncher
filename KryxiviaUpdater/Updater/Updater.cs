@@ -46,6 +46,19 @@ namespace KryxiviaUpdater.Updater
                 _clientVersionApp.TmpFolder = value;
             }
         }
+
+        public bool AutomaticUpdate
+        {
+            get
+            {
+                return _clientVersionApp.AutomaticUpdate;
+            }
+            set
+            {
+                _clientVersionApp.AutomaticUpdate = value;
+            }
+        }
+
         public Updater(string kryxiviaFolder, string pathVersion,
             Action<int, int, string> updateVersionProgress, Action<int> updatePourcentProgress,
             Action<NewsList> setNewsList, Action unzipFileLog)
@@ -101,8 +114,8 @@ namespace KryxiviaUpdater.Updater
                 currentFilesChecksum.Add(new FileCheckSum
                 {
                     Checksum = Utils.GenerateChecksum(file),
-                    FilePath = file,
-                });
+                    FilePath = file.Replace(DownloadFolder + Path.DirectorySeparatorChar, ""),
+                }); ;
             }
 
             var files = _serverVersionApp.FilesChecksum.Except(currentFilesChecksum).ToList();

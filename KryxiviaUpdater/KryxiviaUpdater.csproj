@@ -16,6 +16,10 @@
     <None Remove="Resources\Fonts\FontsFree-Net-Gilroy3.ttf" />
     <None Remove="Resources\Fonts\Sentient-Medium.otf" />
     <None Remove="Resources\Fonts\Sentient-Regular.otf" />
+    <None Remove="Resources\Images\automatic_update.png" />
+    <None Remove="Resources\Images\automatic_update_activate.png" />
+    <None Remove="Resources\Images\automatic_update_activate_over.png" />
+    <None Remove="Resources\Images\automatic_update_over.png" />
     <None Remove="Resources\Images\bg_connect.png" />
     <None Remove="Resources\Images\bg_content.png" />
     <None Remove="Resources\Images\bg_play.png" />
@@ -66,7 +70,19 @@
     <Resource Include="Resources\Fonts\Gilroy-Medium.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\Images\automatic_update_activate.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resources\Images\kryx-avatar.ico" />
+    <Resource Include="Resources\Images\automatic_update.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\automatic_update_activate_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\automatic_update_over.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Images\explorer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
