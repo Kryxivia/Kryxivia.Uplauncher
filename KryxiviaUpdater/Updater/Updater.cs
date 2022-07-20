@@ -16,7 +16,7 @@ namespace KryxiviaUpdater.Updater
     {
         private string _pathVersion;
         private VersionApp _clientVersionApp, _serverVersionApp;
-        private const string _urlServer = "http://144.91.65.207/";
+        private const string _urlServer = "https://cdn.kryxivia.io/";
         private Action<int, int, string> _updateVersionProgress;
         private Action<int> _updatePercentProgress;
         private Action<NewsList> _setNewsList;

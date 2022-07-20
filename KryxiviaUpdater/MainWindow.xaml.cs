@@ -42,15 +42,15 @@ namespace KryxiviaUpdater
         private UpdaterState _updaterState;
         private Process _process;
 
-        private int _timerToAutomaticUpdate = 10; // in minuts
+        private int _timerToAutomaticUpdate = 10; // in minutes
 
-        private const string _website = "https://www.google.com/";
-        private const string _instagram = "https://www.google.com/";
-        private const string _twitter = "https://www.google.com/";
-        private const string _telegram = "https://www.google.com/";
-        private const string _discord = "https://www.google.com/";
-        private const string _youtube = "https://www.google.com/";
-        private const string _trailer = "https://www.google.com/";
+        private const string _website = "https://kryxivia.io/";
+        private const string _instagram = "https://www.instagram.com/kryxivia/";
+        private const string _twitter = "https://twitter.com/kryxivia";
+        private const string _telegram = "https://t.me/kryxivia";
+        private const string _discord = "https://discord.com/invite/eH4fPm66qZ";
+        private const string _youtube = "https://www.youtube.com/channel/UCZV1N-ajeO16504yw4RFR7A";
+        private const string _trailer = "https://www.youtube.com/watch?v=KSp3Upu2U4c";
 
         public MainWindow()
         {
