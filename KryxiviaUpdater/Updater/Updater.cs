@@ -1,4 +1,5 @@
-﻿using KryxiviaUpdater.Core;
+﻿using Ionic.Zip;
+using KryxiviaUpdater.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +20,7 @@ namespace KryxiviaUpdater.Updater
         private VersionApp _clientVersionApp, _serverVersionApp;
         private const string _urlServer = "https://cdn.kryxivia.io/";
         private Action<int, int, string> _updateVersionProgress;
-        private Action<int> _updatePercentProgress;
+        private Action<int, string> _updatePercentProgress;
         private Action<NewsList> _setNewsList;
         private Action _unzipFileLog;
         private string _kryxiviaFolder;
@@ -60,7 +62,7 @@ namespace KryxiviaUpdater.Updater
         }
 
         public Updater(string kryxiviaFolder, string pathVersion,
-            Action<int, int, string> updateVersionProgress, Action<int> updatePourcentProgress,
+            Action<int, int, string> updateVersionProgress, Action<int, string> updatePourcentProgress,
             Action<NewsList> setNewsList, Action unzipFileLog)
         {
             _pathVersion = pathVersion;
@@ -133,7 +135,7 @@ namespace KryxiviaUpdater.Updater
                     client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) =>
                     {
                         _updateVersionProgress(count, files.Count(), speedCache);
-                        _updatePercentProgress((int)progressPercentage);
+                        _updatePercentProgress((int)progressPercentage, progressPercentage+"");
                     };
 
                     client.SpeedChanged += (speed) =>
@@ -154,30 +156,35 @@ namespace KryxiviaUpdater.Updater
         public async Task StartDownload()
         {
             int count = 0;
-            foreach(var version in VersionsToDownload)
+            var size = await GetFilesSize(VersionsToDownload.Select(x => $"{_urlServer}{x}/size").ToList());
+            foreach (var version in VersionsToDownload)
             {
                 count++;
                 var filesVersion = await GetZipVersion($"{_urlServer}{version}");
-                for(int i = 0;i < filesVersion; i++)
+                for (int i = 0; i < filesVersion; i++)
                 {
                     var downloadFileUrl = $"{_urlServer}{version}/{i}.zip";
                     string destinationFilePath = System.IO.Path.Combine(new string[] {
                     TmpFolder,
                     $"{i}.zip" });
 
-                    var speedCache = "";
+                    double speedCache = 0;
 
                     using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
                     {
-                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) => {
-                            _updateVersionProgress(i + 1, filesVersion, speedCache);
-                            _updatePercentProgress((int)progressPercentage);
+                        client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) =>
+                        {
+                            size -= (long)(totalBytesDownloaded / (1024 * 1024));
+                            _updateVersionProgress(i + 1, filesVersion, $" - {speed} MB/s");
+                            var time = (int)((size / (speedCache == 0 ? 0.1 : speedCache)) / 60);
+                            var remaining = time <= 0 ? 1 : time;
+                            _updatePercentProgress((int)progressPercentage, $" Time remaining { remaining } minutes - {(int)progressPercentage}");
                         };
 
                         client.SpeedChanged += (speed) =>
                         {
-                            speedCache = speed;
-                            _updateVersionProgress(i, filesVersion, speed);
+                            speedCache = double.Parse(speed);
+                            _updateVersionProgress(i, filesVersion, $" - {speed} MB/s");
                         };
 
                         await client.StartDownload();
@@ -194,10 +201,28 @@ namespace KryxiviaUpdater.Updater
             WriteServerChecksumFile();
         }
 
+        private async Task<long> GetFilesSize(List<string> files)
+        {
+            long size = 0;
+            for(int i = 0; i < files.Count; i++)
+            {
+                var content = files[0];
+                using (HttpClient client = new HttpClient())
+                {
+                    size += long.Parse(await client.GetStringAsync(content));
+                }
+            }
+
+            return size;
+        }
         private void UnzipArchive(string pathArchive)
         {
             _unzipFileLog();
-            ZipFile.ExtractToDirectory(pathArchive, DownloadFolder);
+            using (var zip = Ionic.Zip.ZipFile.Read(pathArchive))
+            {
+                zip.ExtractAll(DownloadFolder
+                              , ExtractExistingFileAction.OverwriteSilently);
+            }
             File.Delete(pathArchive);
         }
 
@@ -211,11 +236,6 @@ namespace KryxiviaUpdater.Updater
             _serverVersionApp.TmpFolder = _clientVersionApp.TmpFolder;
             _serverVersionApp.DownloadFolder = _clientVersionApp.DownloadFolder;
             File.WriteAllText(_pathVersion, JsonConvert.SerializeObject(_serverVersionApp));
-        }
-
-        public void StartAutomaticUpdate()
-        {
-
         }
 
         private async Task<VersionApp> GetServerVersionApp()
@@ -253,5 +273,6 @@ namespace KryxiviaUpdater.Updater
             }
             return JsonConvert.DeserializeObject<NewsList>(result);
         }
+
     }
 }

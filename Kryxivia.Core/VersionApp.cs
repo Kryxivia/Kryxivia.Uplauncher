@@ -12,6 +12,8 @@ namespace KryxiviaUpdater.Core
         public string Checksum { get; set; } = "";
         public string FilePath { get; set; } = "";
 
+        public long Length = 0;
+
         public bool Equals(FileCheckSum obj) => Checksum == obj.Checksum && FilePath == obj.FilePath;
         public override int GetHashCode()
         {

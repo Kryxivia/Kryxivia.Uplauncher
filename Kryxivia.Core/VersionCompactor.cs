@@ -19,11 +19,12 @@ namespace KryxiviaUpdater.Core
 
 		}
 
-        public int CompressAndZip()
+        public Tuple<int,long> CompressAndZip()
         {
             var step = 0;
             double totalLength = 0;
             int i = 0;
+            long size = 0;
             while (i < _filesChecksum.Count)
             {
                 using (ZipArchive zipFile = ZipFile.Open($"{_pathZip}/{step}.zip", ZipArchiveMode.Create))
@@ -31,16 +32,17 @@ namespace KryxiviaUpdater.Core
                     while(i < _filesChecksum.Count && totalLength <= 300)
                     {
                         totalLength += (new FileInfo(_filesChecksum[i].FilePath).Length) / (1024d * 1024d);
-
                         zipFile.CreateEntryFromFile(_filesChecksum[i].FilePath,
                             _filesChecksum[i].FilePath, CompressionLevel.Optimal);
                         i++;
                     }
+                    size += (long)((new FileInfo($"{_pathZip}/{step}.zip").Length) / (1024d * 1024d));
                     totalLength = 0;
                     step++;
                 }
             }
-            return step;
+
+            return Tuple.Create(step, size);
 
         }
     }

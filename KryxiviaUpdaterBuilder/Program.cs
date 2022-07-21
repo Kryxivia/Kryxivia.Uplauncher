@@ -67,8 +67,10 @@ namespace KryxiviaUpdater.Builder
 
             Directory.CreateDirectory(version);
             var compactor = new VersionCompactor($"{version}", newVersionFiles.ToList());
-            var files = compactor.CompressAndZip();
-            foreach(var file in newVersionFiles.ToList())
+            var compress = compactor.CompressAndZip();
+            var files = compress.Item1;
+            long size = compress.Item2;
+            foreach (var file in newVersionFiles.ToList())
             {
                 var directoryPath = Path.GetDirectoryName(Path.Combine(new string[]{
                 version, file.FilePath }));
@@ -81,6 +83,7 @@ namespace KryxiviaUpdater.Builder
             }
 
             File.WriteAllText($"{version}/files", files.ToString());
+            File.WriteAllText($"{version}/size", size.ToString());
             versionApp.FilesChecksum = currentFilesChecksum;
             versionApp.Versions.Add(version);
             versionApp.NotYetUploaded.Add(version);
@@ -99,9 +102,12 @@ namespace KryxiviaUpdater.Builder
             Directory.CreateDirectory(@base);
 
             compactor = new VersionCompactor(@base, currentFilesChecksum.ToList());
-            files = compactor.CompressAndZip();
+            compress = compactor.CompressAndZip();
+            files = compress.Item1;
+            size = compress.Item2;
             File.WriteAllText($"{@base}/files", files.ToString());
-            if(!versionApp.NotYetUploaded.Contains("0.0.0")) versionApp.NotYetUploaded.Add("0.0.0");
+            File.WriteAllText($"{@base}/size", size.ToString());
+            if (!versionApp.NotYetUploaded.Contains("0.0.0")) versionApp.NotYetUploaded.Add("0.0.0");
 
             File.WriteAllText("versionApp.json", JsonConvert.SerializeObject(versionApp));
             Console.WriteLine("Successfully finished.");

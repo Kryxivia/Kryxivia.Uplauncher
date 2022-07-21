@@ -1,4 +1,4 @@
-﻿    using KryxiviaUpdater.Core;
+﻿using KryxiviaUpdater.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -51,9 +51,18 @@ namespace KryxiviaUpdater
         private const string _discord = "https://discord.com/invite/eH4fPm66qZ";
         private const string _youtube = "https://www.youtube.com/channel/UCZV1N-ajeO16504yw4RFR7A";
         private const string _trailer = "https://www.youtube.com/watch?v=KSp3Upu2U4c";
+        private static System.Threading.Mutex mutex;
+
 
         public MainWindow()
         {
+            bool createdNew;
+            mutex = new System.Threading.Mutex(true, "{8F6F0AC4-B9A1-45fd-A8CF-72F04E6BDE8F}", out createdNew);
+            if (!createdNew)
+            {
+                Environment.Exit(0);
+            }
+
             InitializeComponent();
             Initialize();
             _process = null;
@@ -170,11 +179,11 @@ namespace KryxiviaUpdater
             }), DispatcherPriority.Background);
         }
 
-        public void UpdatePourcentProgress(int pourcent)
+        public void UpdatePourcentProgress(int pourcent, string msg)
         {
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                l_pourcent.Text = $"{pourcent}%";
+                l_pourcent.Text = $"{msg}%";
                 progress.Value = pourcent;
 
             }), DispatcherPriority.Background);

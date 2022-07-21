@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\Images\kryx-avatar.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Images\kryxivia.ico</ApplicationIcon>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
@@ -73,7 +73,7 @@
     <Resource Include="Resources\Images\automatic_update_activate.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Content Include="Resources\Images\kryx-avatar.ico" />
+    <Content Include="Resources\Images\kryxivia.ico" />
     <Resource Include="Resources\Images\automatic_update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -105,6 +105,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.19.0" />
     <PackageReference Include="WindowsAPICodePack" Version="1.1.2" />

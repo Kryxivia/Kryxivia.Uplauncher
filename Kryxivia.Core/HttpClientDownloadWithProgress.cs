@@ -88,7 +88,7 @@ namespace KryxiviaUpdater.Core
                         var elapsedTime = _sw.Elapsed;
                         long bytesChanged = totalBytesRead - _oldTotalBytesRead;
                         _oldTotalBytesRead = totalBytesRead;
-                        SpeedChanged($" - {System.Math.Round(((bytesChanged / elapsedTime.TotalSeconds) / 1024) / 1024, 2)} MB/s");
+                        SpeedChanged($"{System.Math.Round(((bytesChanged / elapsedTime.TotalSeconds) / 1024) / 1024, 2)}");
                         _sw.Reset();
                         _sw.Start();
                     }
