@@ -176,9 +176,17 @@ namespace KryxiviaUpdater.Updater
                         {
                             size -= (long)(totalBytesDownloaded / (1024 * 1024));
                             _updateVersionProgress(i + 1, filesVersion, $" - {speedCache} MB/s");
-                            var time = (int)((size / (speedCache == 0 ? 0.1 : speedCache)) / 60);
-                            var remaining = time <= 0 ? 1 : time;
-                            _updatePercentProgress((int)progressPercentage, $" Time remaining { remaining } minutes - {(int)progressPercentage}");
+                            if(speedCache == 0)
+                            {
+                                _updatePercentProgress((int)progressPercentage, $" {(int)progressPercentage}");
+                            }
+                            else
+                            {
+                                var time = (int)((size / speedCache) / 60);
+                                var remaining = time <= 0 ? 1 : time;
+                                _updatePercentProgress((int)progressPercentage, $" Time remaining { remaining } minutes - {(int)progressPercentage}");
+                            }
+
                         };
 
                         client.SpeedChanged += (speed) =>
