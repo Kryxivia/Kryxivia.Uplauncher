@@ -342,23 +342,26 @@ namespace KryxiviaUpdater
 
             if (File.Exists(clientPath) && _updaterState == UpdaterState.Playing && _process == null)
             {
-                _process = Process.Start(clientPath);
+                Process _process = new Process();
+                _process.StartInfo.FileName = clientPath;
                 _process.StartInfo.Arguments = string.Format("token \"{0}\"", _kryxiviaAPI.jwtRaw);
                 _process.EnableRaisingEvents = true;
+
+
+                _process.Start();
                 _process.Exited += (s, m) =>
                 {
                     _process = null;
                     RefreshUI();
                 };
                 RefreshUI();
-                WindowState = WindowState.Minimized;    
+                WindowState = WindowState.Minimized;
             }
-            else if(_updaterState == UpdaterState.Connecting)
+            else if (_updaterState == UpdaterState.Connecting)
             {
                 _kryxiviaAPI.OpenWebSite();
             }
         }
-
         private void open_directory_download_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
