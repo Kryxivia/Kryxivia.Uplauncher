@@ -176,7 +176,7 @@ namespace KryxiviaUpdater
             {
                 l_version.Text = $"{start}/{count} {speed}";
 
-            }), DispatcherPriority.Background);
+            }), DispatcherPriority.Render);
         }
 
         public void UpdatePourcentProgress(int pourcent, string msg)
@@ -186,7 +186,7 @@ namespace KryxiviaUpdater
                 l_pourcent.Text = $"{msg}%";
                 progress.Value = pourcent;
 
-            }), DispatcherPriority.Background);
+            }), DispatcherPriority.Render);
         }
 
         public void UnzipFileLog()

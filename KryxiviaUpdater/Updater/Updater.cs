@@ -175,7 +175,7 @@ namespace KryxiviaUpdater.Updater
                         client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) =>
                         {
                             size -= (long)(totalBytesDownloaded / (1024 * 1024));
-                            _updateVersionProgress(i + 1, filesVersion, $" - {speed} MB/s");
+                            _updateVersionProgress(i + 1, filesVersion, $" - {speedCache} MB/s");
                             var time = (int)((size / (speedCache == 0 ? 0.1 : speedCache)) / 60);
                             var remaining = time <= 0 ? 1 : time;
                             _updatePercentProgress((int)progressPercentage, $" Time remaining { remaining } minutes - {(int)progressPercentage}");
@@ -184,7 +184,7 @@ namespace KryxiviaUpdater.Updater
                         client.SpeedChanged += (speed) =>
                         {
                             speedCache = double.Parse(speed);
-                            _updateVersionProgress(i, filesVersion, $" - {speed} MB/s");
+                            _updateVersionProgress(i + 1, filesVersion, $" - {speed} MB/s");
                         };
 
                         await client.StartDownload();
