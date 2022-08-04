@@ -9,15 +9,22 @@ using Renci.SshNet;
 using Renci.SshNet.Sftp;
 using Renci.SshNet.Common;
 using System.Text.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Ionic.Zip;
 
 namespace KryxiviaUpdater.Builder
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private const string _urlServer = "https://cdn.kryxivia.io/";
+
+        static async Task Main(string[] args)
         {
             while (true)
             {
+
+                await download();
                 Console.WriteLine("Enter 'C' for creating new maj or 'U' for uploading");
                 var choice = Console.ReadLine();
                 if(choice == "C" || choice == "c")
@@ -30,7 +37,103 @@ namespace KryxiviaUpdater.Builder
             }
         }
 
-        static void create()
+        private static async Task download()
+        {
+            Console.WriteLine("Try synchronization between local version and server version");
+            if (!File.Exists("versionApp.json")) File.WriteAllText("versionApp.json", JsonConvert.SerializeObject(new VersionApp()));
+            var localVersionApp = JsonConvert.DeserializeObject<VersionApp>(File.ReadAllText("versionApp.json"));
+            var serverVersionApp = await GetServerVersionApp();
+            var versionsToDownload = serverVersionApp?.Versions.Except(localVersionApp?.Versions).ToList();
+            if (versionsToDownload.Count > 0)
+            {
+                Console.WriteLine("Synchronization in progress ...");
+                Console.WriteLine("Delete local directory");
+                foreach(var x in localVersionApp?.Versions)
+                {
+                    if (Directory.Exists(x))
+                    {
+                        Directory.Delete(x, true);
+                    }
+                }
+                foreach (var version in versionsToDownload)
+                {
+                    Console.WriteLine($"Download {version} ...");
+                    Directory.CreateDirectory(version);
+                    var filesVersion = await GetZipVersion($"{_urlServer}{version}");
+                    File.WriteAllText($"{version}/files", filesVersion.ToString());
+                    var sizeVersion = await GetSizeVersion($"{_urlServer}{version}");
+                    File.WriteAllText($"{version}/size", filesVersion.ToString());
+                    for (int i = 0; i < filesVersion; i++)
+                    {
+                        var downloadFileUrl = $"{_urlServer}{version}/{i}.zip";
+                        string destinationFilePath = System.IO.Path.Combine(new string[] { version, $"{i}.zip" });
+                        using (var client = new HttpClientDownloadWithProgress(downloadFileUrl, destinationFilePath))
+                        {
+                            client.ProgressChanged += (totalFileSize, totalBytesDownloaded, progressPercentage, speed) =>
+                            {
+                            };
+
+                            client.SpeedChanged += (speed) =>
+                            {
+                            };
+
+                            await client.StartDownload();
+                            UnzipArchive(destinationFilePath, version);
+                        }
+
+                    }
+                }
+                File.WriteAllText("versionApp.json", JsonConvert.SerializeObject(serverVersionApp));
+            }
+            Console.WriteLine($"End of synchronization.");
+        }
+
+        private static void UnzipArchive(string pathArchive, string destinationFolder)
+        {
+            using (var zip = Ionic.Zip.ZipFile.Read(pathArchive))
+            {
+                zip.ExtractAll(destinationFolder
+                              , ExtractExistingFileAction.OverwriteSilently);
+            }
+        }
+
+        private static async Task<int> GetZipVersion(string urlVersion)
+        {
+            var versionAppContents = $"{urlVersion}/files";
+            var result = "";
+            using (HttpClient client = new HttpClient())
+            {
+                result = await client.GetStringAsync(versionAppContents);
+            }
+
+            return int.Parse(result);
+        }
+
+        private static async Task<int> GetSizeVersion(string urlVersion)
+        {
+            var versionAppContents = $"{urlVersion}/size";
+            var result = "";
+            using (HttpClient client = new HttpClient())
+            {
+                result = await client.GetStringAsync(versionAppContents);
+            }
+
+            return int.Parse(result);
+        }
+
+        private static async Task<VersionApp> GetServerVersionApp()
+        {
+            var versionAppContents = $"{_urlServer}/versionApp.json";
+            var result = "";
+            using (HttpClient client = new HttpClient())
+            {
+                result = await client.GetStringAsync(versionAppContents);
+            }
+
+            return JsonConvert.DeserializeObject<VersionApp>(result);
+        }
+
+        private static void create()
         {
             var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("kryxivia_builder.json"));
             if (!File.Exists("versionApp.json")) File.WriteAllText("versionApp.json", JsonConvert.SerializeObject(new VersionApp()));
