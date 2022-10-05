@@ -55,6 +55,12 @@ namespace KryxiviaUpdater.Updater
                 jwtSecurityToken = new JwtSecurityToken(LoginToken?.jwtAttached);
                 if (DateTime.Now > jwtSecurityToken.ValidTo)
                 {
+                    LoginToken = null;
+                    while (LoginToken == null)
+                    {
+                        await LoadNewToken();
+                    }
+
                     return UpdaterState.Connecting;
                 }
                 else
