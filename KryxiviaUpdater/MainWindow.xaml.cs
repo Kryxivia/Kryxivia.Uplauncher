@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using System.Linq;
 using System.Timers;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using log4net;
 
 namespace KryxiviaUpdater
 {
@@ -53,7 +54,7 @@ namespace KryxiviaUpdater
         private const string _trailer = "https://www.youtube.com/watch?v=KSp3Upu2U4c";
         private static System.Threading.Mutex mutex;
 
-
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public MainWindow()
         {
             bool createdNew;
@@ -65,12 +66,15 @@ namespace KryxiviaUpdater
 
             InitializeComponent();
             Initialize();
+            log4net.Config.XmlConfigurator.Configure();
+            _log.Info("------ STARTING UPDATER ------");
             _process = null;
             _timer = new Timer();
             _timer.Elapsed += new ElapsedEventHandler(async (o, e) =>
             {
                 if( _process == null && (_updaterState == UpdaterState.Playing || _updaterState == UpdaterState.Connecting))
                 {
+                    _log.Info("START AUTOMATIC UPDATING");
                     _updaterState = await _updater.Setup();
                     if (_updaterState == Core.UpdaterState.Downloading)
                     {
@@ -85,8 +89,8 @@ namespace KryxiviaUpdater
             _timer.Enabled = true;
             _timer.Stop();
 
-            _updater = new Updater.Updater("client", "versionApp.json", UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
-            _kryxiviaAPI = new Updater.KryxiviaAPI("https://kryx-app-auth-api.azurewebsites.net/", "https://auth-app.kryxivia.io/"
+            _updater = new Updater.Updater(_log, "client", "versionApp.json", UpdateVersionProgress, UpdatePourcentProgress, SetNewsList, UnzipFileLog);
+            _kryxiviaAPI = new Updater.KryxiviaAPI(_log, "https://kryx-app-auth-api.azurewebsites.net/", "https://auth-app.kryxivia.io/"
                 , UpdateState, UpdateAddress);
             UpdateAddress("");
             Task.Run(async () =>
@@ -359,6 +363,7 @@ namespace KryxiviaUpdater
             }
             else if (_updaterState == UpdaterState.Connecting)
             {
+                _log.Info("CLICK CONNECTING BUTTON");
                 _kryxiviaAPI.OpenWebSite();
             }
         }

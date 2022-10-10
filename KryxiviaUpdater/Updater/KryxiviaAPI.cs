@@ -1,4 +1,5 @@
 ﻿using KryxiviaUpdater.Core;
+using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace KryxiviaUpdater.Updater
         private Task _authPooler;
         private Action<UpdaterState> _updateState;
         private Action<string> _updateAddress;
+        private ILog _log;
+
         public JwtSecurityToken jwtSecurityToken;
         public string jwtRaw;
         public LoginToken LoginToken
@@ -26,9 +29,10 @@ namespace KryxiviaUpdater.Updater
             private set;
         }
 
-        public KryxiviaAPI(string urlApi, string websiteAuthentification, Action<UpdaterState> updateState
+        public KryxiviaAPI(ILog log, string urlApi, string websiteAuthentification, Action<UpdaterState> updateState
             ,Action<string> updateAddress)
         {
+            _log = log;
             _urlApi = urlApi;
             _websiteAuthentification = websiteAuthentification;
             _updateState = updateState;
@@ -40,33 +44,44 @@ namespace KryxiviaUpdater.Updater
         public async Task<UpdaterState> Setup()
         {
             if (File.Exists("kryxiviaToken.json"))
+            {
+                _log.Info("KRYXIVIATOKEN EXIST, WE REED IT !");
                 LoginToken = JsonConvert.DeserializeObject<LoginToken>(File.ReadAllText("kryxiviaToken.json"));
+            }
 
             while (LoginToken == null)
             {
+                _log.Info("LOGIN TOKEN NULL, TRY TO LOAD NEW TOKEN");
                 await LoadNewToken();
             }
 
             if (LoginToken?.jwtAttached == null)
+            {
+                _log.Info("JWT ATTACHED ARE NULL, WAITING FOR CONNECTING");
                 return UpdaterState.Connecting;
+            }
             else
             {
                 jwtRaw = LoginToken.jwtAttached;
                 jwtSecurityToken = new JwtSecurityToken(LoginToken?.jwtAttached);
                 if (DateTime.Now > jwtSecurityToken.ValidTo)
                 {
+                    _log.Info("TOKEN EXPIRED");
                     LoginToken = null;
                     while (LoginToken == null)
                     {
+                        _log.Info("LOGIN TOKEN NULL, TRY TO LOAD NEW TOKEN");
                         await LoadNewToken();
                     }
 
+                    _log.Info("JWT ATTACHED ARE NULL, WAITING FOR CONNECTING");
                     return UpdaterState.Connecting;
                 }
                 else
                 {
                     var publicKey = jwtSecurityToken.Claims.First(x => x.Type == "publickey");
                     _updateAddress(publicKey.Value);
+                    _log.Info("TOKEN GOOD, CAN PLAYING");
                     return UpdaterState.Playing;
                 }
             }
@@ -118,17 +133,20 @@ namespace KryxiviaUpdater.Updater
             {
                 _authPooler = new Task(async () =>
                 {
+                    _log.Info("START CALLBACK AUTHENTIFICATION");
                     var callback = await CallBackAuthentification();
                     while(callback == null || callback.jwtAttached == null)
                     {
                         await Task.Delay(1000);
                         callback = await CallBackAuthentification();
                     }
+                    _log.Info($"WALLET CONNECTED SUCCESSFULLY");
                     File.WriteAllText("kryxiviaToken.json", JsonConvert.SerializeObject(callback));
                     jwtSecurityToken = new JwtSecurityToken(callback?.jwtAttached);
                     jwtRaw = callback?.jwtAttached;
                     var publicKey = jwtSecurityToken.Claims.First(x => x.Type == "publickey");
                     _updateAddress(publicKey.Value);
+                    _log.Info("TOKEN GOOD, CAN PLAYING");
                     _updateState(UpdaterState.Playing);
                     _authPooler = null;
                 });

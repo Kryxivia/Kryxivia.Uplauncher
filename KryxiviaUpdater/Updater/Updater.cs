@@ -1,5 +1,6 @@
 ﻿using Ionic.Zip;
 using KryxiviaUpdater.Core;
+using log4net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,8 @@ namespace KryxiviaUpdater.Updater
         private Action<NewsList> _setNewsList;
         private Action _unzipFileLog;
         private string _kryxiviaFolder;
+        private ILog _log;
+
         public IEnumerable<FileCheckSum> FilesToDownload { get; set; }
         public List<string> VersionsToDownload { get;set; }
         public string DownloadFolder
@@ -61,10 +64,11 @@ namespace KryxiviaUpdater.Updater
             }
         }
 
-        public Updater(string kryxiviaFolder, string pathVersion,
+        public Updater(ILog log, string kryxiviaFolder, string pathVersion,
             Action<int, int, string> updateVersionProgress, Action<int, string> updatePourcentProgress,
             Action<NewsList> setNewsList, Action unzipFileLog)
         {
+            _log = log;
             _pathVersion = pathVersion;
             _clientVersionApp = null;
             _serverVersionApp = null;
@@ -77,7 +81,9 @@ namespace KryxiviaUpdater.Updater
 
         public async Task<UpdaterState> Setup()
         {
+            _log.Info("STARTING SETUP");
             _setNewsList(await GetServerNews());
+            _log.Info("SET NEWS LIST");
             return await CheckUpdate();
 
         }
@@ -95,15 +101,18 @@ namespace KryxiviaUpdater.Updater
                     if (_clientVersionApp.Versions.Count == 0)
                     {
                         VersionsToDownload = new List<string> { "0.0.0" };
+                        _log.Info("FIRST TIME INSTALLING UPDATER");
                     }
                     else
                     {
                         VersionsToDownload = _serverVersionApp?.Versions.Except(_clientVersionApp?.Versions).ToList();
+                        _log.Info($"INSTALL {VersionsToDownload.Count} VERSIONS");
                     }
                     return UpdaterState.Downloading;
                 }
             }
 
+            _log.Info("ALL GOOD WE CAN CONNECT !");
             return UpdaterState.Connecting;
         }
 
@@ -155,7 +164,9 @@ namespace KryxiviaUpdater.Updater
 
         public async Task StartDownload()
         {
+            _log.Info("START DOWNLOADING");
             int count = 0;
+            _log.Info("GETTING THE FILES SIZE");
             var size = await GetFilesSize(VersionsToDownload.Select(x => $"{_urlServer}{x}/size").ToList());
             foreach (var version in VersionsToDownload)
             {
@@ -164,6 +175,7 @@ namespace KryxiviaUpdater.Updater
                 for (int i = 0; i < filesVersion; i++)
                 {
                     var downloadFileUrl = $"{_urlServer}{version}/{i}.zip";
+                    _log.Info($"START DOWNLOADING {downloadFileUrl}");
                     string destinationFilePath = System.IO.Path.Combine(new string[] {
                     TmpFolder,
                     $"{i}.zip" });
@@ -207,6 +219,7 @@ namespace KryxiviaUpdater.Updater
             }
 
             WriteServerChecksumFile();
+            _log.Info("ALL VERSIONS DOWNLOADED !");
         }
 
         private async Task<long> GetFilesSize(List<string> files)
