@@ -32,6 +32,5 @@ namespace KryxiviaUpdater.Core
         public string DownloadFolder { get; set; } = Directory.GetCurrentDirectory();
         public string TmpFolder { get; set; } = Directory.GetCurrentDirectory();
         public bool AutomaticUpdate { get; set; } = true;
-
     }
 }

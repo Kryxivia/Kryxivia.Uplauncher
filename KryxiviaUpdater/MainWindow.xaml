@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KryxiviaUpdater"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
         Title="Kryxivia" Height="579" Width="942" AllowsTransparency="True" WindowStyle="None" MouseDown="Window_MouseDown_1">
     <Window.Foreground>
         <ImageBrush/>

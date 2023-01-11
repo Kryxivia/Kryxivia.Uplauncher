@@ -12,12 +12,14 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace KryxiviaUpdater.Updater
 {
     public class Updater
     {
         private string _pathVersion;
+        private string _updaterLocalVersion, _updaterServerVersion;
         private VersionApp _clientVersionApp, _serverVersionApp;
         private const string _urlServer = "https://cdn.kryxivia.io/";
         private Action<int, int, string> _updateVersionProgress;
@@ -77,6 +79,7 @@ namespace KryxiviaUpdater.Updater
             _setNewsList = setNewsList;
             _unzipFileLog = unzipFileLog;
             _kryxiviaFolder = kryxiviaFolder;
+            VersionsToDownload = new List<string>();
         }
 
         public async Task<UpdaterState> Setup()
@@ -91,8 +94,11 @@ namespace KryxiviaUpdater.Updater
         public async Task<UpdaterState> CheckUpdate()
         {
             if (!File.Exists(_pathVersion)) File.WriteAllText(_pathVersion, JsonConvert.SerializeObject(new VersionApp()));
+            if (!File.Exists("updaterVersion")) File.WriteAllText("updaterVersion", "1.0.0");
             _clientVersionApp = JsonConvert.DeserializeObject<VersionApp>(File.ReadAllText(_pathVersion));
             _serverVersionApp = await GetServerVersionApp();
+            _updaterLocalVersion = File.ReadAllText("updaterVersion");
+            _updaterServerVersion = await GetServerUpdaterApp();
             if (_clientVersionApp != null & _serverVersionApp != null)
             {
                 if (_serverVersionApp?.Versions.Count != _clientVersionApp?.Versions.Count)
@@ -111,6 +117,9 @@ namespace KryxiviaUpdater.Updater
                     return UpdaterState.Downloading;
                 }
             }
+
+            if (_updaterServerVersion != _updaterLocalVersion)
+                return UpdaterState.Downloading;
 
             _log.Info("ALL GOOD WE CAN CONNECT !");
             return UpdaterState.Connecting;
@@ -188,7 +197,7 @@ namespace KryxiviaUpdater.Updater
                         {
                             size -= (long)(totalBytesDownloaded / (1024 * 1024));
                             _updateVersionProgress(i + 1, filesVersion, $" - {speedCache} MB/s");
-                            if(speedCache == 0)
+                            if (speedCache == 0)
                             {
                                 _updatePercentProgress((int)progressPercentage, $" {(int)progressPercentage}");
                             }
@@ -220,8 +229,19 @@ namespace KryxiviaUpdater.Updater
 
             WriteServerChecksumFile();
             _log.Info("ALL VERSIONS DOWNLOADED !");
-        }
 
+            if (_updaterServerVersion != _updaterLocalVersion
+                && File.Exists("KryxiviaAutoUpdater.exe"))
+            {
+                Process _process = new Process();
+                _process.StartInfo.FileName = "KryxiviaAutoUpdater.exe";
+                _process.StartInfo.Verb = "runas";
+                _process.Start();
+
+                Environment.Exit(0);
+            }
+        }
+    
         private async Task<long> GetFilesSize(List<string> files)
         {
             long size = 0;
@@ -269,6 +289,18 @@ namespace KryxiviaUpdater.Updater
             }
 
             return JsonConvert.DeserializeObject<VersionApp>(result);
+        }
+
+        private async Task<string> GetServerUpdaterApp()
+        {
+            var versionAppContents = $"{_urlServer}updater/version";
+            var result = "";
+            using (HttpClient client = new HttpClient())
+            {
+                result = await client.GetStringAsync(versionAppContents);
+            }
+
+            return result;
         }
 
         private async Task<int> GetZipVersion(string urlVersion)
