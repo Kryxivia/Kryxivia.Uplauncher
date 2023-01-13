@@ -5,6 +5,7 @@
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <BaseOutputPath>C:\Users\Yamo\source\repos\KryxiviaUpdater\KryxiviaUpdater\bin</BaseOutputPath>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>

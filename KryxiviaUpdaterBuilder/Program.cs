@@ -17,14 +17,19 @@ namespace KryxiviaUpdater.Builder
 {
     internal class Program
     {
-        private const string _urlServer = "https://cdn.kryxivia.io/";
+        private const string _urlServer = "https://cdn.kryxivia.io/test/";
 
         static async Task Main(string[] args)
         {
             while (true)
             {
+                Console.WriteLine("If you want to synchronize with the server enter 'U' (there must be at least one version in the server for the synchronization to work)");
+                var synchronize  = Console.ReadLine();
+                if (synchronize == "U" || synchronize == "u")
+                {
+                    await download();
+                }
 
-                await download();
                 Console.WriteLine("Enter 'C' for creating new maj or 'U' for uploading");
                 var choice = Console.ReadLine();
                 if(choice == "C" || choice == "c")
@@ -218,7 +223,7 @@ namespace KryxiviaUpdater.Builder
         static void upload()
         {
             var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("kryxivia_builder.json"));
-            using (var sftp = new SftpClient(config.Server, config.User, config.Password))
+            using (var sftp = new SftpClient(config.Server, 21, config.User, config.Password))
             {
                 Console.WriteLine("Try to connect to SFTP ...");
                 sftp.Connect();

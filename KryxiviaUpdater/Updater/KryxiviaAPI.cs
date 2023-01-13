@@ -121,8 +121,9 @@ namespace KryxiviaUpdater.Updater
             return JsonConvert.DeserializeObject<LoginToken>(result);
         }
 
-        public void OpenWebSite()
+        public async void OpenWebSite()
         {
+            await LoadNewToken();
             var process = new System.Diagnostics.
                 ProcessStartInfo($"{_websiteAuthentification}?auth-token={LoginToken?.tokenHash}")
             {
